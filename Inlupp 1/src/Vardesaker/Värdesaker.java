@@ -5,6 +5,7 @@ public abstract class Värdesaker {
 	
 	abstract public String getTyp();
 	abstract public double getVärde();
+	abstract public String getAttribut();
 	
 	public Värdesaker(String namn) {
 		this.namn = namn;
@@ -15,7 +16,7 @@ public abstract class Värdesaker {
 	}
 	
 	public String toString() {		
-		return getTyp() + ": " + namn + getVärde() ;
+		return getTyp() + ": " + namn +  " värde: " + getVärde()  + getAttribut();
 	}
 
 }
@@ -35,6 +36,13 @@ class Smycke extends Värdesaker {
 	public String getTyp() {
 		return "Smycke";
 	}
+	
+	public String getGuldOrSilver() {
+		if (guld)
+			return "Guld";
+		else
+			return "Silver";
+	}
 
 	public double getVärde() {
 	
@@ -44,6 +52,10 @@ class Smycke extends Värdesaker {
 	else {
 		return (700 + 500*ädelstenar) * 1.25;
 		}	
+	}
+	
+	public String getAttribut() {
+		return "Antal ädelstenar: " + ädelstenar + ". " + getGuldOrSilver();
 	}
 }
 
@@ -63,8 +75,12 @@ class Aktie extends Värdesaker {
 		kurs = nyKurs;
 	}
 	
-	public double räknaVärde() {
+	public double getVärde() {
 		return (antalAktier * kurs) * 1.25;
+	}
+	
+	public String getAttribut() {
+		return "Antal aktier: " + antalAktier + ". Kurs: " + kurs;
 	}
 }
 
@@ -84,8 +100,12 @@ class Apparat extends Värdesaker {
 //		return INPUT FRÅN ANVÄNDAREN / 10 * inköpspris;
 //	}
 	
-	public double räknaVärde() {
+	public double getVärde() {
 		return (inköpspris * slitage) * 1.25;
+	}
+	
+	public String getAttribut() {
+		return "Inköpspris" + inköpspris + ". " + "Slitage: " + slitage;
 	}
 }
 

@@ -19,8 +19,9 @@ public class Interface extends JFrame implements ActionListener {
 		fält = new JTextField(8);
 		add(fält);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(600, 600);
+		setSize(1080, 1920);
 		setVisible(true);
+		
 	}
 	
 	public static void main (String [] args) {
