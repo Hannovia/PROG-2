@@ -2,6 +2,7 @@ package Vardesaker;
 
 public class Värdesaker {
 	private String namn;
+	private int värde;
 	
 	public Värdesaker(String namn) {
 		this.namn = namn;
@@ -10,22 +11,24 @@ public class Värdesaker {
 	public String getNamn() {
 		return namn;
 	}
+	
+	public int getVärde() {
+		return värde;
+	}
 }
 
 class Smycke extends Värdesaker {
 
 	private int ädelstenar;
-	private int ädelVärde = ädelstenar * 500;
 	private boolean guld = false;
-	private int värde;
-	private int totalVärdeSmycke = 0; 
+
 	
 	public Smycke (String namn) {
 		super(namn);
 		
 	}
 
-	public void räknaVärdet() {
+/*	public void räknaVärdet() {
 	
 	if (guld == true) {
 		värde  = (2000) + (ädelVärde);
@@ -33,7 +36,7 @@ class Smycke extends Värdesaker {
 	else {
 		värde = (700) + ädelVärde;
 	}	
-	}
+	}*/
 }
 
 class Aktie extends Värdesaker {
