@@ -1,8 +1,10 @@
 package Vardesaker;
 
-public class Värdesaker {
+public abstract class Värdesaker {
 	private String namn;
-	private int värde;
+	
+	abstract public String getTyp();
+	abstract public double getVärde();
 	
 	public Värdesaker(String namn) {
 		this.namn = namn;
@@ -12,10 +14,12 @@ public class Värdesaker {
 		return namn;
 	}
 	
-	public int getVärde() {
-		return värde;
+	public String toString() {		
+		return getTyp() + ": " + namn + getVärde() ;
 	}
+
 }
+
 
 class Smycke extends Värdesaker {
 
@@ -27,39 +31,63 @@ class Smycke extends Värdesaker {
 		super(namn);
 		
 	}
-
-/*	public void räknaVärdet() {
 	
-	if (guld == true) {
-		värde  = (2000) + (ädelVärde);
+	public String getTyp() {
+		return "Smycke";
+	}
+
+	public double getVärde() {
+	
+	if (guld) {
+		return (2000 + 500 * ädelstenar) * 1.25;
 	}
 	else {
-		värde = (700) + ädelVärde;
-	}	
-	}*/
+		return (700 + 500*ädelstenar) * 1.25;
+		}	
+	}
 }
 
 class Aktie extends Värdesaker {
 	private double antalAktier;
 	private double kurs;
-	private double aktieVärde = (antalAktier) * (kurs);
 	
 	public Aktie (String namn) {
 		super(namn);
 	}
 	
+	public String getTyp() {
+		return "Aktie";
+	}
+	
 	public void setKurs(double nyKurs) {
 		kurs = nyKurs;
+	}
+	
+	public double räknaVärde() {
+		return (antalAktier * kurs) * 1.25;
 	}
 }
 
 class Apparat extends Värdesaker {
 	private double inköpspris;
 	private double slitage;
-	private double apparatVärde = (inköpspris) * (slitage);
 	
 	public Apparat (String namn ) {
 		super(namn);
 	}
+	
+	public String getTyp() {
+		return "Apparat";
+	}
+	
+//	public double beräknaSlitage() {
+//		return INPUT FRÅN ANVÄNDAREN / 10 * inköpspris;
+//	}
+	
+	public double räknaVärde() {
+		return (inköpspris * slitage) * 1.25;
+	}
 }
+
+
 
