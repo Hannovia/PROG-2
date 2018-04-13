@@ -28,7 +28,7 @@ class Smycke extends Värdesaker {
 	private boolean guld = false;
 
 	
-	public Smycke (String namn) {
+	public Smycke (String namn, int värde, boolean guld) {
 		super(namn);
 		
 	}
@@ -63,7 +63,7 @@ class Aktie extends Värdesaker {
 	private double antalAktier;
 	private double kurs;
 	
-	public Aktie (String namn) {
+	public Aktie (String namn, int antal, int kurs) {
 		super(namn);
 	}
 	
@@ -88,7 +88,7 @@ class Apparat extends Värdesaker {
 	private double inköpspris;
 	private double slitage;
 	
-	public Apparat (String namn ) {
+	public Apparat (String namn, int värde, int slitage) {
 		super(namn);
 	}
 	
