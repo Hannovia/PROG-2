@@ -28,8 +28,10 @@ class Smycke extends Värdesaker {
 	private boolean guld = false;
 
 	
-	public Smycke (String namn, int värde, boolean guld) {
+	public Smycke (String namn, int värde, boolean guld, int ädelstenar) {
 		super(namn);
+		this.guld = guld;
+		this.ädelstenar = ädelstenar;
 		
 	}
 	
@@ -42,6 +44,10 @@ class Smycke extends Värdesaker {
 			return "Guld";
 		else
 			return "Silver";
+	}
+	
+	public int getÄdelstenar() {
+		return ädelstenar;
 	}
 
 	public double getVärde() {

@@ -5,8 +5,8 @@ import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 
-// Om man trycker i guld på addera smycke, och sedan visar, är smycket silver
 // Skriva kod för beräkning av slitage i VÄRDESAKER
+// Skriva en knapp för börskrasch
 
 public class Interface extends JFrame implements ActionListener {
 	
@@ -46,7 +46,7 @@ public class Interface extends JFrame implements ActionListener {
 		add(south, BorderLayout.SOUTH);
 		
 		
-		// Drop down meny
+		// Drop-down meny
 		south.add(valdLabel);
 		south.add(värdeBox);
 		värdeBox.addActionListener(new dropDownLyss());
@@ -121,6 +121,8 @@ public class Interface extends JFrame implements ActionListener {
 		public boolean getGold() {
 			return goldBox.isSelected();
 		}
+		
+		
 	}
 	
 	class addApparat extends JPanel{
@@ -234,8 +236,9 @@ public class Interface extends JFrame implements ActionListener {
 					String namn = smyckeRuta.getName();
 					int stenar = smyckeRuta.getStenar();
 					boolean guld = smyckeRuta.getGold();
+					int ädelstenar = smyckeRuta.getStenar();
 					
-					Värdesaker värdesak = new Smycke(namn, stenar, guld);
+					Värdesaker värdesak = new Smycke(namn, stenar, guld, ädelstenar);
 					värdesakLista.add(värdesak);
 				} catch (NumberFormatException e) {
 					JOptionPane.showMessageDialog(Interface.this, "Fel! Mata in rätt data", "Fel! Mata in rätt data", JOptionPane.ERROR_MESSAGE);
@@ -276,9 +279,12 @@ public class Interface extends JFrame implements ActionListener {
 		}
 	}
 	
-	public void actionPerformed(ActionEvent ave) {
-		String str = fält.getText();
+	class BörskraschLyss implements ActionListener{
+		public void actionPerformed (ActionEvent ave) {
+			
+		}
 	}
+	
 		
 	public static void main (String [] args) {
 		new Interface ();
