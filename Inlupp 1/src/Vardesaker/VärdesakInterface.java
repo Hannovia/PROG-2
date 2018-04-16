@@ -5,10 +5,9 @@ import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 
-// Skriva kod för beräkning av slitage i VÄRDESAKER
-// Skriva en knapp för börskrasch
+// Sortering
 
-public class Interface extends JFrame implements ActionListener {
+public class VärdesakInterface extends JFrame{
 	
 	ArrayList<Värdesaker> värdesakLista = new ArrayList<>();
 	
@@ -21,7 +20,7 @@ public class Interface extends JFrame implements ActionListener {
 	JRadioButton sorteringNamn;
 	JPanel south;
 	
-	public Interface () {
+	public VärdesakInterface () {
 		super ("Sakregister");
 		setLayout(new BorderLayout());
 		
@@ -59,6 +58,7 @@ public class Interface extends JFrame implements ActionListener {
 		
 		JButton börskraschKnapp = new JButton ("Börskrasch");
 		south.add(börskraschKnapp);
+		börskraschKnapp.addActionListener(new BörskraschLyss());
 		
 		
 		// Sortering - RIGHT
@@ -209,7 +209,7 @@ public class Interface extends JFrame implements ActionListener {
 			case "Aktie":
 				try {
 				addAktie aktieRuta = new addAktie();
-				int svar = JOptionPane.showConfirmDialog(Interface.this, aktieRuta, "Ny Aktie", JOptionPane.OK_CANCEL_OPTION);
+				int svar = JOptionPane.showConfirmDialog(VärdesakInterface.this, aktieRuta, "Ny Aktie", JOptionPane.OK_CANCEL_OPTION);
 				
 				if(svar != JOptionPane.OK_OPTION)
 					return;
@@ -217,11 +217,11 @@ public class Interface extends JFrame implements ActionListener {
 				int antal = aktieRuta.getAntal();
 				int kurs = aktieRuta.getKurs();
 				
-				Värdesaker värdesak = new Aktie(namn, antal, kurs);
+				Aktie värdesak = new Aktie(namn, antal, kurs);
 				värdesakLista.add(värdesak);
 				
 				}catch (NumberFormatException e){
-					JOptionPane.showMessageDialog(Interface.this, "Fel! Mata in rätt data", "Fel! Mata in rätt data", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(VärdesakInterface.this, "Fel! Mata in rätt data", "Fel! Mata in rätt data", JOptionPane.ERROR_MESSAGE);
 				}
 				
 				break;
@@ -229,7 +229,7 @@ public class Interface extends JFrame implements ActionListener {
 			case "Smycke":
 				try {
 					addSmycke smyckeRuta = new addSmycke();
-					int svar = JOptionPane.showConfirmDialog(Interface.this, smyckeRuta, "Nytt smycke", JOptionPane.OK_CANCEL_OPTION);
+					int svar = JOptionPane.showConfirmDialog(VärdesakInterface.this, smyckeRuta, "Nytt smycke", JOptionPane.OK_CANCEL_OPTION);
 					
 					if(svar != JOptionPane.OK_OPTION)
 						return;
@@ -241,7 +241,7 @@ public class Interface extends JFrame implements ActionListener {
 					Värdesaker värdesak = new Smycke(namn, stenar, guld, ädelstenar);
 					värdesakLista.add(värdesak);
 				} catch (NumberFormatException e) {
-					JOptionPane.showMessageDialog(Interface.this, "Fel! Mata in rätt data", "Fel! Mata in rätt data", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(VärdesakInterface.this, "Fel! Mata in rätt data", "Fel! Mata in rätt data", JOptionPane.ERROR_MESSAGE);
 				}
 				
 				break;
@@ -249,7 +249,7 @@ public class Interface extends JFrame implements ActionListener {
 			case "Apparat":
 				try {
 					addApparat apparatRuta = new addApparat();
-					int svar = JOptionPane.showConfirmDialog(Interface.this, apparatRuta, "Ny apparat", JOptionPane.OK_CANCEL_OPTION);
+					int svar = JOptionPane.showConfirmDialog(VärdesakInterface.this, apparatRuta, "Ny apparat", JOptionPane.OK_CANCEL_OPTION);
 					
 					if(svar != JOptionPane.OK_OPTION)
 						return;
@@ -261,7 +261,7 @@ public class Interface extends JFrame implements ActionListener {
 					värdesakLista.add(värdesak);
 					
 				}catch (NumberFormatException e) {
-					JOptionPane.showMessageDialog(Interface.this, "Fel! Mata in rätt data", "Fel! Mata in rätt data", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(VärdesakInterface.this, "Fel! Mata in rätt data", "Fel! Mata in rätt data", JOptionPane.ERROR_MESSAGE);
 				}
 				
 				break;
@@ -281,12 +281,18 @@ public class Interface extends JFrame implements ActionListener {
 	
 	class BörskraschLyss implements ActionListener{
 		public void actionPerformed (ActionEvent ave) {
-			
+			for(Värdesaker värdesak: värdesakLista) {
+				if (värdesak instanceof Aktie) {
+					Aktie a = (Aktie)värdesak;
+					a.börskrasch();
+				}
+			}
+				
 		}
 	}
 	
 		
 	public static void main (String [] args) {
-		new Interface ();
+		new VärdesakInterface ();
 	}
 }

@@ -1,4 +1,4 @@
-package Vardesaker;
+	package Vardesaker;
 
 public abstract class Värdesaker {
 	private String namn;
@@ -66,23 +66,29 @@ class Smycke extends Värdesaker {
 }
 
 class Aktie extends Värdesaker {
-	private double antalAktier;
-	private double kurs;
+	private int antalAktier;
+	private int kurs;
 	
-	public Aktie (String namn, int antal, int kurs) {
+	public Aktie (String namn, int antalAktier, int kurs) {
 		super(namn);
+		this.antalAktier = antalAktier;
+		this.kurs = kurs;
 	}
 	
 	public String getTyp() {
 		return "Aktie";
 	}
 	
-	public void setKurs(double nyKurs) {
+	public void setKurs(int nyKurs) {
 		kurs = nyKurs;
 	}
 	
 	public double getVärde() {
 		return (antalAktier * kurs) * 1.25;
+	}
+	
+	public double börskrasch() {
+		return kurs = 0;
 	}
 	
 	public String getAttribut() {
@@ -96,15 +102,17 @@ class Apparat extends Värdesaker {
 	
 	public Apparat (String namn, int värde, int slitage) {
 		super(namn);
+		this.inköpspris = värde;
+		this.slitage = slitage;
 	}
 	
 	public String getTyp() {
 		return "Apparat";
 	}
 	
-//	public double beräknaSlitage() {
-//		return INPUT FRÅN ANVÄNDAREN / 10 * inköpspris;
-//	}
+	public double beräknaSlitage() {
+		return slitage / 10 * inköpspris;
+	}
 	
 	public double getVärde() {
 		return (inköpspris * slitage) * 1.25;
