@@ -16,7 +16,7 @@ public abstract class Värdesaker {
 	}
 	
 	public String toString() {		
-		return getTyp() + ": " + namn +  " värde: " + getVärde()  + getAttribut();
+		return getTyp() + ": " + namn +  " - värde: " + getVärde()  + getAttribut();
 	}
 
 }
@@ -41,9 +41,9 @@ class Smycke extends Värdesaker {
 	
 	public String getGuldOrSilver() {
 		if (guld)
-			return "Guld";
+			return "Av guld";
 		else
-			return "Silver";
+			return "Av silver";
 	}
 	
 	public int getÄdelstenar() {
@@ -61,7 +61,7 @@ class Smycke extends Värdesaker {
 	}
 	
 	public String getAttribut() {
-		return "Antal ädelstenar: " + ädelstenar + ". " + getGuldOrSilver();
+		return " - Antal ädelstenar: " + ädelstenar + ". " + getGuldOrSilver();
 	}
 }
 

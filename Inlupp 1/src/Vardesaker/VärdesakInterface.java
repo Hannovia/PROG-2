@@ -5,7 +5,7 @@ import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 
-// Sortering
+// Fel på värde hos apparater
 
 public class VärdesakInterface extends JFrame{
 
@@ -69,7 +69,7 @@ public class VärdesakInterface extends JFrame{
 		right.add(new JLabel("Sortera efter "));
 		sorteringNamn = new JRadioButton("Namn", true);
 		right.add(sorteringNamn);
-		JRadioButton sorteringVärde = new JRadioButton("Värde");
+		sorteringVärde = new JRadioButton("Värde");
 		right.add(sorteringVärde);
 		right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
 		add(right, BorderLayout.EAST);
@@ -275,11 +275,13 @@ public class VärdesakInterface extends JFrame{
 	class VisaLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
 			display.setText("");
+			
+			if(sorteringNamn.isSelected())
+				värdesakLista.sort(new NamnComparator());
+			else if(sorteringVärde.isSelected())
+				värdesakLista.sort(new VärdeComparator());
+		
 			for(Värdesaker värdesak: värdesakLista) {
-				if(sorteringNamn.isSelected())
-					värdesakLista.sort(new NamnComparator());
-				else if(sorteringVärde.isSelected())
-					värdesakLista.sort(new VärdeComparator());
 				display.append(värdesak.toString() + "\n");
 			}
 		}
