@@ -92,7 +92,7 @@ class Aktie extends Värdesaker {
 	}
 	
 	public String getAttribut() {
-		return "Antal aktier: " + antalAktier + ". Kurs: " + kurs;
+		return " - Antal aktier: " + antalAktier + " - Kurs: " + kurs;
 	}
 }
 
@@ -110,16 +110,12 @@ class Apparat extends Värdesaker {
 		return "Apparat";
 	}
 	
-	public double beräknaSlitage() {
-		return slitage / 10 * inköpspris;
-	}
-	
 	public double getVärde() {
-		return (inköpspris * slitage) * 1.25;
+		return (inköpspris * (slitage/10)) * 1.25;
 	}
 	
 	public String getAttribut() {
-		return "Inköpspris" + inköpspris + ". " + "Slitage: " + slitage;
+		return " - Inköpspris " + inköpspris + " - " + " Slitage: " + slitage;
 	}
 }
 

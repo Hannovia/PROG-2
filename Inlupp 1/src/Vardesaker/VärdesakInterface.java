@@ -5,7 +5,6 @@ import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 
-// Fel på värde hos apparater
 
 public class VärdesakInterface extends JFrame{
 
@@ -306,7 +305,7 @@ public class VärdesakInterface extends JFrame{
 	
 	class VärdeComparator implements Comparator<Värdesaker>{
 		public int compare (Värdesaker v1, Värdesaker v2) {
-			return (int) (v1.getVärde()-v2.getVärde());
+			return (int) (v2.getVärde()-v1.getVärde());
 		}
 	}
 	
