@@ -8,7 +8,7 @@ import java.awt.event.*;
 // Sortering
 
 public class VärdesakInterface extends JFrame{
-	
+
 	ArrayList<Värdesaker> värdesakLista = new ArrayList<>();
 	
 	String[] värdesaker = {"Smycke", "Apparat", "Aktie"};
@@ -18,6 +18,7 @@ public class VärdesakInterface extends JFrame{
 	JTextField fält;
 	JTextArea display;
 	JRadioButton sorteringNamn;
+	JRadioButton sorteringVärde;
 	JPanel south;
 	
 	public VärdesakInterface () {
@@ -72,6 +73,7 @@ public class VärdesakInterface extends JFrame{
 		right.add(sorteringVärde);
 		right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
 		add(right, BorderLayout.EAST);
+		
 	
 		
 		ButtonGroup sorteringGroup = new ButtonGroup(); //Knapp nr 2 avamrkeras
@@ -273,9 +275,13 @@ public class VärdesakInterface extends JFrame{
 	class VisaLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
 			display.setText("");
-			for(Värdesaker värdesak: värdesakLista)
-				// Lägga till sortering efter värde och namn
+			for(Värdesaker värdesak: värdesakLista) {
+				if(sorteringNamn.isSelected())
+					värdesakLista.sort(new NamnComparator());
+				else if(sorteringVärde.isSelected())
+					värdesakLista.sort(new VärdeComparator());
 				display.append(värdesak.toString() + "\n");
+			}
 		}
 	}
 	
@@ -286,8 +292,19 @@ public class VärdesakInterface extends JFrame{
 					Aktie a = (Aktie)värdesak;
 					a.börskrasch();
 				}
-			}
-				
+			}	
+		}
+	}
+	
+	class NamnComparator implements Comparator<Värdesaker>{
+		public int compare(Värdesaker v1, Värdesaker v2) {
+			return v1.getNamn().compareTo(v2.getNamn());
+		}
+	}
+	
+	class VärdeComparator implements Comparator<Värdesaker>{
+		public int compare (Värdesaker v1, Värdesaker v2) {
+			return (int) (v1.getVärde()-v2.getVärde());
 		}
 	}
 	
