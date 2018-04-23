@@ -25,6 +25,9 @@ public class VärdesakInterface extends JFrame{
 		setLayout(new BorderLayout());
 		
 		JLabel fönsterTitel = new JLabel ("Värdesaker");
+		JPanel norra = new JPanel();
+		add(norra, BorderLayout.NORTH);
+		norra.add(fönsterTitel);
 		
 		
 		// Display + textfält i mitten
@@ -305,7 +308,7 @@ public class VärdesakInterface extends JFrame{
 	
 	class VärdeComparator implements Comparator<Värdesaker>{
 		public int compare (Värdesaker v1, Värdesaker v2) {
-			return (int) (v2.getVärde()-v1.getVärde());
+			return (int) (v2.getMomsVärde()-v1.getMomsVärde());
 		}
 	}
 	

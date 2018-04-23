@@ -1,10 +1,11 @@
-	package Vardesaker;
+package Vardesaker;
 
 public abstract class Värdesaker {
 	private String namn;
 	
 	abstract public String getTyp();
 	abstract public double getVärde();
+	abstract public int getMomsVärde();
 	abstract public String getAttribut();
 	
 	public Värdesaker(String namn) {
@@ -16,7 +17,7 @@ public abstract class Värdesaker {
 	}
 	
 	public String toString() {		
-		return getTyp() + ": " + namn +  " - värde: " + getVärde()  + getAttribut();
+		return getTyp() + ": " + namn +  " - värde: " + getMomsVärde()  + getAttribut();
 	}
 
 }
@@ -53,11 +54,15 @@ class Smycke extends Värdesaker {
 	public double getVärde() {
 	
 	if (guld) {
-		return (2000 + 500 * ädelstenar) * 1.25;
+		return (2000 + 500 * ädelstenar);
 	}
 	else {
-		return (700 + 500*ädelstenar) * 1.25;
+		return (700 + 500*ädelstenar);
 		}	
+	}
+	
+	public int getMomsVärde() {
+		return (int) (getVärde() * 1.25);
 	}
 	
 	public String getAttribut() {
@@ -84,7 +89,11 @@ class Aktie extends Värdesaker {
 	}
 	
 	public double getVärde() {
-		return (antalAktier * kurs) * 1.25;
+		return (antalAktier * kurs);
+	}
+	
+	public int getMomsVärde() {
+		return (int) (getVärde()* 1.25);
 	}
 	
 	public double börskrasch() {
@@ -111,7 +120,11 @@ class Apparat extends Värdesaker {
 	}
 	
 	public double getVärde() {
-		return (inköpspris * (slitage/10)) * 1.25;
+		return (inköpspris * (slitage/10));
+	}
+	
+	public int getMomsVärde() {
+		return(int) (getVärde() * 1.25);
 	}
 	
 	public String getAttribut() {
