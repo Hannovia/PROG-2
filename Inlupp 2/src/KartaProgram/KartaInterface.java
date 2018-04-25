@@ -15,13 +15,16 @@ public class KartaInterface extends JFrame {
 	JRadioButton describedRB;
 	JMenuBar menyBar;
 	JMenu meny;
+	JTextField sökFält;
+	JButton nyKnapp;
+	MusLyss musLyss = new MusLyss();
 
-	
 	String[] kategorier = {"Underground", "Bus", "Train"};
 	
 	KartaInterface() {
+		super("Inlupp 2: Hanna Severien, Viktor Fagerström Eriksson");
 		
-		//Menu 
+		//Meny
 		menyBar = new JMenuBar();
 		meny = new JMenu("Archive");
 		menyBar.add(meny);
@@ -39,14 +42,18 @@ public class KartaInterface extends JFrame {
 		
 		setJMenuBar(menyBar);
 		
+		
+		// Filväljare
 		FileFilter ff = new FileNameExtensionFilter("Bilder", "jpg", "gif", "png");
 		filVäljare.setFileFilter(ff);
+		
 		
 		//Interface - NORRA
 		JPanel norra = new JPanel();
 		add(norra, BorderLayout.NORTH);
-		JButton nyKnapp = new JButton("New");
+		nyKnapp = new JButton("New");
 		norra.add(nyKnapp);
+		nyKnapp.addActionListener(new NyLyss());
 		
 		namedRB = new JRadioButton("Named", true);
 		describedRB = new JRadioButton("Described");
@@ -57,26 +64,39 @@ public class KartaInterface extends JFrame {
 		sorteringGrupp.add(namedRB);
 		sorteringGrupp.add(describedRB);
 		
-		JTextField searchFält = new JTextField(20);
-		norra.add(searchFält);
-		String searchText = searchFält.getText(); //Sökning
+		//Sökfält
+		sökFält = new JTextField(10);
+		norra.add(sökFält);
+		String sökText = sökFält.getText();
 		
 		
 		// Knappar
-		JButton searchKnapp = new JButton("Search");
-		norra.add(searchKnapp);
-		JButton hideKnapp = new JButton ("Hide");
-		norra.add(hideKnapp);
+		JButton sökaKnapp = new JButton("Search");
+		norra.add(sökaKnapp);
+		sökaKnapp.addActionListener(new SökaLyss());
+		
+		JButton gömmaKnapp = new JButton ("Hide");
+		norra.add(gömmaKnapp);
+		gömmaKnapp.addActionListener(new GömLyss());
+		
 		JButton removeKnapp = new JButton ("Remove");
 		norra.add(removeKnapp);
-		JButton coordinatesKnapp = new JButton ("Coordinates");
-		norra.add(coordinatesKnapp);
+		removeKnapp.addActionListener(new RemoveLyss());
+		
+		JButton koordinaterKnapp = new JButton ("Coordinates");
+		norra.add(koordinaterKnapp);
+		koordinaterKnapp.addActionListener(new KoordinaterLyss());
+		
 		
 		
 		//Interface - HÖGRA
 		JPanel högra = new JPanel();
 		JLabel kategorierText = new JLabel ("Categories");
 		högra.add(kategorierText);
+		
+		
+		
+		//Kategorilista - HÖGRA
 		JList<String> Kategorilista = new JList <String>(kategorier);
 		scrollPane = new JScrollPane(Kategorilista);
 		högra.add(scrollPane);
@@ -85,12 +105,13 @@ public class KartaInterface extends JFrame {
 		
 		JButton gömKategorier = new JButton("Hide Categories");
 		högra.add(gömKategorier);
+		gömKategorier.addActionListener(new GömKategoriLyss());
 		
 		
 		// Fönster
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setLocationRelativeTo(null);
-		setSize(800, 400);
+//		setLocationRelativeTo(null);
+		setSize(1140, 923);
 		setVisible(true);
 		
 	}
@@ -114,6 +135,80 @@ public class KartaInterface extends JFrame {
 			
 			validate();
 			repaint();
+		}
+	}
+	
+	class SökaLyss implements ActionListener{
+		public void actionPerformed(ActionEvent ave) {
+			String sökOrd = sökFält.getText();
+//			String def = uppslag.get(sökOrd);
+//			display.setText(def);
+			
+		}
+	}
+	
+	
+	class GömKategoriLyss implements ActionListener{
+		public void actionPerformed(ActionEvent ave) {
+			
+		}
+	}
+	
+	class NyLyss implements ActionListener{
+		public void actionPerformed(ActionEvent ave) {
+			kartpanel.addMouseListener(musLyss);
+			nyKnapp.setEnabled(false);
+			kartpanel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+		}
+	}
+	
+	class MusLyss extends MouseAdapter {
+		@Override
+		public void mouseClicked(MouseEvent mev) {
+//			Position position = new Position(x, y);
+//			kartpanel.add(position);
+//			kartpanel.validate();
+//			kartpanel.repaint();
+			kartpanel.removeMouseListener(musLyss);
+			nyKnapp.setEnabled(true);
+			kartpanel.setCursor(Cursor.getDefaultCursor());
+		}
+	}
+	
+	
+	class GömLyss implements ActionListener{
+		public void actionPerformed(ActionEvent ave) {
+			
+		}
+	}
+	
+	class KoordinaterLyss implements ActionListener{
+		public void actionPerformed(ActionEvent ave) {
+			
+		}
+	}
+	
+	class RemoveLyss implements ActionListener{
+		public void actionPerformed(ActionEvent ave) {
+			
+		}
+	}
+	
+	class LaddaPlatserLyss implements ActionListener{
+		public void actionPerformed(ActionEvent ave) {
+			
+		}
+	}
+	
+	class SparaLyss implements ActionListener{
+		public void actionPerformed(ActionEvent ave) {
+			
+		}
+	}
+	
+	class ExitLyss implements ActionListener{
+		public void actionPerformed(ActionEvent ave) {
+			
 		}
 	}
 	

@@ -1,5 +1,5 @@
 package KartaProgram;
 
-public class Pin {
+public class Position {
 
 }
