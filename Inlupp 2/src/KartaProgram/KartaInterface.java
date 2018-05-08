@@ -162,10 +162,10 @@ public class KartaInterface extends JFrame {
 		}
 	}
 	
-	class addPlats extends JPanel{
+	class AddPlats extends JPanel{
 		JTextField namnFält = new JTextField(10);
 		
-		addPlats(){
+		AddPlats(){
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			
 			JPanel rad1 = new JPanel();
@@ -192,8 +192,8 @@ public class KartaInterface extends JFrame {
 			nyKnapp.setEnabled(true);
 			kartpanel.setCursor(Cursor.getDefaultCursor());
 			
-			addPlats platsRuta = new addPlats();
-			String namn = JOptionPane.showInputDialog(KartaInterface.this, platsRuta, "Ny plats", JOptionPane.OK_CANCEL_OPTION);
+			//AddPlats platsRuta = new AddPlats();
+			//String namn = JOptionPane.showInputDialog(KartaInterface.this, platsRuta, "Ny plats", JOptionPane.OK_CANCEL_OPTION);
 		}
 	}
 	

@@ -6,7 +6,8 @@ import java.awt.*;
 public class KartPanel extends JPanel {
 	private ImageIcon karta;
 	
-	KartPanel(String filNamn){
+	public KartPanel(String filNamn){
+		setLayout(null);
 		karta = new ImageIcon(filNamn);
 		int w = karta.getIconWidth();
 		int h = karta.getIconHeight();
