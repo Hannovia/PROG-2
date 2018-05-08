@@ -162,16 +162,38 @@ public class KartaInterface extends JFrame {
 		}
 	}
 	
+	class addPlats extends JPanel{
+		JTextField namnFält = new JTextField(10);
+		
+		addPlats(){
+			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+			
+			JPanel rad1 = new JPanel();
+			rad1.add(new JLabel("Namn på plats: "));
+			rad1.add(namnFält);
+			add(rad1);
+		}
+		
+		public String getName() {
+			return namnFält.getText();
+		}
+	}
+	
 	class MusLyss extends MouseAdapter {
 		@Override
 		public void mouseClicked(MouseEvent mev) {
-//			Position position = new Position(x, y);
-//			kartpanel.add(position);
-//			kartpanel.validate();
-//			kartpanel.repaint();
+			int x = mev.getX();
+			int y = mev.getY();
+			Plats plats = new Plats(x, y);
+			kartpanel.add(plats);
+			kartpanel.validate();
+			kartpanel.repaint();
 			kartpanel.removeMouseListener(musLyss);
 			nyKnapp.setEnabled(true);
 			kartpanel.setCursor(Cursor.getDefaultCursor());
+			
+			addPlats platsRuta = new addPlats();
+			String namn = JOptionPane.showInputDialog(KartaInterface.this, platsRuta, "Ny plats", JOptionPane.OK_CANCEL_OPTION);
 		}
 	}
 	
