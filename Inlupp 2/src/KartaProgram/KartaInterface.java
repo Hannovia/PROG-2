@@ -6,6 +6,7 @@ import java.awt.event.*;
 import java.io.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.*;
+import java.util.*;
 
 public class KartaInterface extends JFrame {
 	KartPanel kartpanel = null;
@@ -20,6 +21,7 @@ public class KartaInterface extends JFrame {
 	MusLyss musLyss = new MusLyss();
 	String[] kategorier = {"Underground", "Bus", "Train"};
 	JList<String> kategorilista = new JList <String>(kategorier);
+	Map<Position, Plats> koordinatlista = new HashMap<>();
 	
 	KartaInterface() {
 		super("Inlupp 2: Hanna Severien, Viktor Fagerström Eriksson");
@@ -41,6 +43,7 @@ public class KartaInterface extends JFrame {
 		newMap.addActionListener(new NyKartaLyss());
 		
 		setJMenuBar(menyBar);
+		
 		
 		
 		// Filväljare
@@ -116,6 +119,7 @@ public class KartaInterface extends JFrame {
 		
 	}
 	
+	
 	class NyKartaLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
 			int svar = filVäljare.showOpenDialog(KartaInterface.this);
@@ -174,6 +178,7 @@ public class KartaInterface extends JFrame {
 			}
 		
 			Plats plats = new Plats(x, y,vald);
+			Position position = new Position(x, y);
 			
 			kartpanel.add(plats);
 			kartpanel.validate();
