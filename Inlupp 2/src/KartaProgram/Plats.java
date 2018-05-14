@@ -4,35 +4,45 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class Plats extends JComponent{
-	public Plats(int x, int y) {
-		
-		setBounds(x,y,50,50);
-	//	setPreferredSize(new Dimension(50,450));
-	// Skriva kod som bestämmer färg på triangel beroende på kategori
 
+
+public class Plats extends JComponent {
+	String vald;
+	public Plats(int x, int y, String vald) {
+		this.vald = vald;
+		setBounds(x-25,y-50,50,50);
 		
 	}
 	
 	public void paintComponent(Graphics g) {
-		System.out.println("test");
 		super.paintComponent(g);
-			int[] xes = {0, 25, 50};
-			int[] yes = {0, 50, 0};
-			g.setColor(Color.RED);
-			g.fillPolygon(xes, yes, 3);
-//		if (Underground) {
-//			stuff
-//		} else if(Bus){
-//			stuff
-//		} else if (Train){
-//			stuff
-//		}
+			int[] xes = {25, 0, 50};
+			int[] yes = {50, 0, 0};
+			
+
+			
+		switch(vald) {
+			case "Underground":
+				g.setColor(Color.BLUE);
+				repaint();
+				break;
+			case "Bus":
+				g.setColor(Color.RED);
+				repaint();
+				break;
+			case "Train":
+				g.setColor(Color.GREEN);
+				repaint();
+				break;
+			default:
+				g.setColor(Color.BLACK);
+				repaint();
+				break;
+			
+		}
+		g.fillPolygon(xes, yes, 3);
 		
-	//	int[] xes = { 150, 300, 150};
-	//	int[] yes = {100, 0, 150, 300};
-	//	g.drawPolygon(xes, yes, 3);
-	
-	}
+	}	
+
 }
 

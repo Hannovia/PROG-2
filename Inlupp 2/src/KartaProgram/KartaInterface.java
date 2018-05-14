@@ -18,8 +18,8 @@ public class KartaInterface extends JFrame {
 	JTextField sökFält;
 	JButton nyKnapp;
 	MusLyss musLyss = new MusLyss();
-
 	String[] kategorier = {"Underground", "Bus", "Train"};
+	JList<String> kategorilista = new JList <String>(kategorier);
 	
 	KartaInterface() {
 		super("Inlupp 2: Hanna Severien, Viktor Fagerström Eriksson");
@@ -97,8 +97,8 @@ public class KartaInterface extends JFrame {
 		
 		
 		//Kategorilista - HÖGRA
-		JList<String> Kategorilista = new JList <String>(kategorier);
-		scrollPane = new JScrollPane(Kategorilista);
+		
+		scrollPane = new JScrollPane(kategorilista);
 		högra.add(scrollPane);
 		högra.setLayout(new BoxLayout(högra, BoxLayout.Y_AXIS));
 		add(högra, BorderLayout.EAST);
@@ -162,29 +162,19 @@ public class KartaInterface extends JFrame {
 		}
 	}
 	
-	class AddPlats extends JPanel{
-		JTextField namnFält = new JTextField(10);
-		
-		AddPlats(){
-			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-			
-			JPanel rad1 = new JPanel();
-			rad1.add(new JLabel("Namn på plats: "));
-			rad1.add(namnFält);
-			add(rad1);
-		}
-		
-		public String getName() {
-			return namnFält.getText();
-		}
-	}
-	
 	class MusLyss extends MouseAdapter {
 		@Override
 		public void mouseClicked(MouseEvent mev) {
 			int x = mev.getX();
 			int y = mev.getY();
-			Plats plats = new Plats(x, y);
+			
+			String vald = kategorilista.getSelectedValue();
+			if(vald==null) {
+				vald = "Ingen";
+			}
+		
+			Plats plats = new Plats(x, y,vald);
+			
 			kartpanel.add(plats);
 			kartpanel.validate();
 			kartpanel.repaint();
@@ -192,8 +182,7 @@ public class KartaInterface extends JFrame {
 			nyKnapp.setEnabled(true);
 			kartpanel.setCursor(Cursor.getDefaultCursor());
 			
-			//AddPlats platsRuta = new AddPlats();
-			//String namn = JOptionPane.showInputDialog(KartaInterface.this, platsRuta, "Ny plats", JOptionPane.OK_CANCEL_OPTION);
+			String namn = JOptionPane.showInputDialog(KartaInterface.this, "Ny plats");
 		}
 	}
 	
