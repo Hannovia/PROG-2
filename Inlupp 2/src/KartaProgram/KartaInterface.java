@@ -27,6 +27,8 @@ public class KartaInterface extends JFrame {
 	BeskrivenPlats beskrivenPlats;
 	Plats plats;
 	
+	private boolean kategorilistaGömd;
+	
 	private boolean markerad = false;
 	
 	
@@ -174,7 +176,9 @@ public class KartaInterface extends JFrame {
 	
 	class GömKategoriLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
-			
+			kategorilista.setVisible(false);
+		
+		
 		}
 	}
 	
@@ -266,20 +270,27 @@ public class KartaInterface extends JFrame {
 	public class MarkeraLyss extends MouseAdapter{
 		@Override
 		public void mouseClicked (MouseEvent mev) {
-			Plats p = (Plats)mev.getSource();
-			if(p1 == null) {
-				p1 =p;
-				p1.setVisad(true);
-			} else if (p2 == null && p!= p1) {
-				p2 = p;
-				p2.setVisad(true);
-			}
+//			Plats p = (Plats)mev.getSource();
+//			if(p1 == null) {
+//				p1 =p;
+//				p1.setVisad(true);
+//			} else if (p2 == null && p!= p1) {
+//				p2 = p;
+//				p2.setVisad(true);
+//			}
 			
 		}
 	}
 
 	class GömLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
+			if (markerad = true) {
+				System.out.println("Nada markado");
+				
+				return;
+			}else {
+				System.out.println("något markat");
+			}
 //			if(visad = false) {
 //				Plats.setVisible(true); 
 //				visad = true;

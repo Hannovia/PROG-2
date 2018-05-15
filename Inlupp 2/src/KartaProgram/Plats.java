@@ -7,7 +7,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 
-public class Plats extends JComponent {
+abstract public class Plats extends JComponent {
 	String vald;
 	private boolean markerad = false;
 
@@ -15,7 +15,6 @@ public class Plats extends JComponent {
 		this.vald = vald;
 
 		setBounds(x-25,y-50,50,50);
-	
 	}
 
 	public void paintComponent(Graphics g) {
@@ -46,10 +45,10 @@ public class Plats extends JComponent {
 		
 	}	
 	
-	public void setVisad(boolean to) {
-		markerad = to;
-		repaint();
-	}
+//	public void setVisad(boolean to) {
+//		markerad = to;
+//		repaint();
+//	}
 
 }
 
