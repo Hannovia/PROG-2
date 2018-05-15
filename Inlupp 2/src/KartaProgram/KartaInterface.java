@@ -8,6 +8,9 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.*;
 import java.util.*;
 
+// TO-DO-LIST
+// - när remove-knappen går igenom listan ska den endast gå igenom en lista med markeade objekt, inte alla objekt
+
 public class KartaInterface extends JFrame {
 	KartPanel kartpanel = null;
 	JScrollPane scrollPane = null;
@@ -19,12 +22,28 @@ public class KartaInterface extends JFrame {
 	JTextField sökFält;
 	JButton nyKnapp;
 	MusLyss musLyss = new MusLyss();
+	MarkeraLyss markeraLyss = new MarkeraLyss();
+	NamngivenPlats namngivenPlats;
+	BeskrivenPlats beskrivenPlats;
+	Plats plats;
+	
+	private boolean markerad = false;
+	
+	
 	String[] kategorier = {"Underground", "Bus", "Train"};
 	JList<String> kategorilista = new JList <String>(kategorier);
 	Map<Position, Plats> koordinatlista = new HashMap<>();
+	ArrayList<Plats> platser = new ArrayList<>();
 	
 	KartaInterface() {
 		super("Inlupp 2: Hanna Severien, Viktor Fagerström Eriksson");
+		
+	
+		
+		for (Plats p: platser) {
+			kartpanel.add(p);
+			p.addMouseListener(new MarkeraLyss());
+		}
 		
 		//Meny
 		menyBar = new JMenuBar();
@@ -62,6 +81,8 @@ public class KartaInterface extends JFrame {
 		describedRB = new JRadioButton("Described");
 		norra.add(namedRB);
 		norra.add(describedRB);
+		
+	
 		
 		ButtonGroup sorteringGrupp = new ButtonGroup();
 		sorteringGrupp.add(namedRB);
@@ -151,7 +172,6 @@ public class KartaInterface extends JFrame {
 		}
 	}
 	
-	
 	class GömKategoriLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
 			
@@ -203,34 +223,70 @@ public class KartaInterface extends JFrame {
 				vald = "Ingen";
 			}
 		
-			Plats plats = new Plats(x, y,vald);
-			Position position = new Position(x, y);
-			
-			kartpanel.add(plats);
-			kartpanel.validate();
-			kartpanel.repaint();
 			kartpanel.removeMouseListener(musLyss);
 			nyKnapp.setEnabled(true);
 			kartpanel.setCursor(Cursor.getDefaultCursor());
 			
+			
 			if (namedRB.isSelected()) {
 				String namn = JOptionPane.showInputDialog(KartaInterface.this, "Ange namn på platsen, tack så mkt:");
-			}
-			else if (describedRB.isSelected()) {
+				
+				Plats namngivenPlats = new NamngivenPlats(x, y, vald);
+				Position position = new Position(x, y);
+				platser.add(namngivenPlats);
+				kartpanel.add(namngivenPlats);
+				
+				kartpanel.validate();
+				kartpanel.repaint();
+			
+			} else if (describedRB.isSelected()) {
 				addDescribedPlace describedRuta = new addDescribedPlace();
 				int svar = JOptionPane.showConfirmDialog(KartaInterface.this,  describedRuta, "Ny ruta", JOptionPane.OK_CANCEL_OPTION);
 			
 			if (svar != JOptionPane.OK_OPTION)
 				return;
+			
 			String namn = describedRuta.getName();
+			String beskrivning = describedRuta.getBeskrivning();
+			
+			Plats beskrivenPlats = new BeskrivenPlats(x, y, vald, beskrivning);
+			Position position = new Position(x, y);
+			platser.add(beskrivenPlats);
+			kartpanel.add(beskrivenPlats);
+			
+			kartpanel.validate();
+			kartpanel.repaint();
 			
 			}
+		}
+	}
+	
+	private Plats p1 = null, p2 = null;
+	
+	public class MarkeraLyss extends MouseAdapter{
+		@Override
+		public void mouseClicked (MouseEvent mev) {
+			Plats p = (Plats)mev.getSource();
+			if(p1 == null) {
+				p1 =p;
+				p1.setVisad(true);
+			} else if (p2 == null && p!= p1) {
+				p2 = p;
+				p2.setVisad(true);
+			}
+			
 		}
 	}
 
 	class GömLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
-			
+//			if(visad = false) {
+//				Plats.setVisible(true); 
+//				visad = true;
+//			} else if (visad = true){ 
+//				setVisible(false);
+//				visad = false;
+//			}
 		}
 	}
 	
@@ -242,7 +298,24 @@ public class KartaInterface extends JFrame {
 	
 	class RemoveLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
-			
+		
+			if(markerad) {
+				System.out.println("Inget markerat");
+				return;
+			} else {
+				platser.remove(plats);
+				System.out.println("Det markerade tas bort");
+				
+//				kartpanel.remove(plats);
+				
+				// det fungerar, objektet tas bort ur listan, men tringeln visas fortfarande på kartan eftersom
+				// jag inte tar bort den från kartpanelen, eftersom jag får null pointer exception
+				
+				
+				
+				// lägga till att de även tas bort ur Hashmappen
+				repaint();
+			}
 		}
 	}
 	
