@@ -166,6 +166,32 @@ public class KartaInterface extends JFrame {
 		}
 	}
 	
+	class addDescribedPlace extends JPanel {
+		JTextField namnFält = new JTextField(10);
+		JTextField beskrivningFält = new JTextField(30);
+		addDescribedPlace() {
+			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+			
+			JPanel rad1 = new JPanel();
+			rad1.add(new JLabel ("Namn: "));
+			rad1.add(namnFält);
+			add(rad1);
+			
+			JPanel rad2 = new JPanel();
+			rad2.add(new JLabel("Beskrivning: "));
+			rad2.add(beskrivningFält);
+			add(rad2);
+		}
+		
+		public String getNamn() {
+			return namnFält.getText();
+		}
+		
+		public String getBeskrivning() {
+			return beskrivningFält.getText();
+		}
+	}
+	
 	class MusLyss extends MouseAdapter {
 		@Override
 		public void mouseClicked(MouseEvent mev) {
@@ -187,11 +213,21 @@ public class KartaInterface extends JFrame {
 			nyKnapp.setEnabled(true);
 			kartpanel.setCursor(Cursor.getDefaultCursor());
 			
-			String namn = JOptionPane.showInputDialog(KartaInterface.this, "Ny plats");
+			if (namedRB.isSelected()) {
+				String namn = JOptionPane.showInputDialog(KartaInterface.this, "Ange namn på platsen, tack så mkt:");
+			}
+			else if (describedRB.isSelected()) {
+				addDescribedPlace describedRuta = new addDescribedPlace();
+				int svar = JOptionPane.showConfirmDialog(KartaInterface.this,  describedRuta, "Ny ruta", JOptionPane.OK_CANCEL_OPTION);
+			
+			if (svar != JOptionPane.OK_OPTION)
+				return;
+			String namn = describedRuta.getName();
+			
+			}
 		}
 	}
-	
-	
+
 	class GömLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
 			
