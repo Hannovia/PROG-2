@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 public class BeskrivenPlats extends Plats {
 
 	private String beskrivning;
+
 	
 	
 	public BeskrivenPlats(int x, int y, String vald, String beskrivning) {
@@ -18,4 +19,6 @@ public class BeskrivenPlats extends Plats {
 	public String getBeskrivning() {
 		return beskrivning;
 	}
+	
+
 }

@@ -249,20 +249,24 @@ public class KartaInterface extends JFrame {
 	public class MarkeraLyss extends MouseAdapter{
 		@Override
 		public void mouseClicked (MouseEvent mev) {
-			markerad =! markerad;
-			repaint();
-			Plats p = (Plats)mev.getSource();
-			markeradePlatser.add(p);
-			p.setVisible(false); //Här håller viktor på att leka lite
+			
+				markerad =! markerad;
+				repaint();
+				Plats p = (Plats)mev.getSource();
+				markeradePlatser.add(p);
+				platser.add(p);
+				p.setVisible(false); //Här håller viktor på att leka lite
+			
 		}
 	}
 
 
 	public class GömLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
-//			if(beskrivenPlats)
-//			kartpanel.remove(namngivenPlats);
-			repaint();
+			
+			kartpanel.remove(namngivenPlats);
+			kartpanel.repaint();
+			kartpanel.validate();
 
 		}
 	}
@@ -275,9 +279,11 @@ public class KartaInterface extends JFrame {
 	
 	class RemoveLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
-				
-//			kartpanel.remove(plats);
-				
+			if(markerad) {
+				kartpanel.remove(plats);
+				System.out.println("test");
+			}
+			
 			// det fungerar, objektet tas bort ur listan, men tringeln visas fortfarande på kartan eftersom
 			// jag inte tar bort den från kartpanelen, eftersom jag får null pointer exception
 				
