@@ -6,14 +6,13 @@ import java.awt.event.*;
 import java.awt.Color;
 import java.awt.Graphics;
 
-
 abstract public class Plats extends JComponent {
 	String vald;
 	private boolean markerad = false;
 
 	public Plats(int x, int y, String vald) {
 		this.vald = vald;
-
+		addMouseListener(new MarkeraLyss());
 		setBounds(x-25,y-50,50,50);
 	}
 
@@ -43,12 +42,26 @@ abstract public class Plats extends JComponent {
 		}
 		g.fillPolygon(xes, yes, 3);
 		
+		if(!markerad) {
+			return;
+		} else {
+			g.setColor(Color.MAGENTA);
+			g.drawRect(0, 0, 49, 49);
+			
+		}
 	}	
+	public class MarkeraLyss extends MouseAdapter{
+		@Override
+		public void mouseClicked (MouseEvent mev) {
+			markerad =! markerad;
+			repaint();
+			
+		}
+	}
 	
-//	public void setVisad(boolean to) {
-//		markerad = to;
-//		repaint();
-//	}
-
+	public void setVisad (boolean to) {
+		markerad = to;
+		repaint();
+	}
 }
 

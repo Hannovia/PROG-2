@@ -26,9 +26,6 @@ public class KartaInterface extends JFrame {
 	NamngivenPlats namngivenPlats;
 	BeskrivenPlats beskrivenPlats;
 	Plats plats;
-	
-	private boolean kategorilistaGömd;
-	
 	private boolean markerad = false;
 	
 	
@@ -36,12 +33,12 @@ public class KartaInterface extends JFrame {
 	JList<String> kategorilista = new JList <String>(kategorier);
 	Map<Position, Plats> koordinatlista = new HashMap<>();
 	ArrayList<Plats> platser = new ArrayList<>();
+	ArrayList<Plats> markeradePlatser = new ArrayList<>();
 	
 	KartaInterface() {
 		super("Inlupp 2: Hanna Severien, Viktor Fagerström Eriksson");
 		
 	
-		
 		for (Plats p: platser) {
 			kartpanel.add(p);
 			p.addMouseListener(new MarkeraLyss());
@@ -66,7 +63,6 @@ public class KartaInterface extends JFrame {
 		setJMenuBar(menyBar);
 		
 		
-		
 		// Filväljare
 		FileFilter ff = new FileNameExtensionFilter("Bilder", "jpg", "gif", "png");
 		filVäljare.setFileFilter(ff);
@@ -84,7 +80,6 @@ public class KartaInterface extends JFrame {
 		norra.add(namedRB);
 		norra.add(describedRB);
 		
-	
 		
 		ButtonGroup sorteringGrupp = new ButtonGroup();
 		sorteringGrupp.add(namedRB);
@@ -94,7 +89,6 @@ public class KartaInterface extends JFrame {
 		sökFält = new JTextField(10);
 		norra.add(sökFält);
 		String sökText = sökFält.getText();
-		
 		
 		// Knappar
 		JButton sökaKnapp = new JButton("Search");
@@ -113,17 +107,12 @@ public class KartaInterface extends JFrame {
 		norra.add(koordinaterKnapp);
 		koordinaterKnapp.addActionListener(new KoordinaterLyss());
 		
-		
-		
 		//Interface - HÖGRA
 		JPanel högra = new JPanel();
 		JLabel kategorierText = new JLabel ("Categories");
 		högra.add(kategorierText);
 		
-		
-		
 		//Kategorilista - HÖGRA
-		
 		scrollPane = new JScrollPane(kategorilista);
 		högra.add(scrollPane);
 		högra.setLayout(new BoxLayout(högra, BoxLayout.Y_AXIS));
@@ -133,7 +122,6 @@ public class KartaInterface extends JFrame {
 		högra.add(gömKategorier);
 		gömKategorier.addActionListener(new GömKategoriLyss());
 		
-		
 		// Fönster
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 //		setLocationRelativeTo(null);
@@ -141,7 +129,6 @@ public class KartaInterface extends JFrame {
 		setVisible(true);
 		
 	}
-	
 	
 	class NyKartaLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
@@ -159,7 +146,7 @@ public class KartaInterface extends JFrame {
 			scrollPane = new JScrollPane(kartpanel);
 			
 			add(scrollPane, BorderLayout.CENTER);
-			
+
 			validate();
 			repaint();
 		}
@@ -170,15 +157,12 @@ public class KartaInterface extends JFrame {
 			String sökOrd = sökFält.getText();
 //			String def = uppslag.get(sökOrd);
 //			display.setText(def);
-			
 		}
 	}
 	
 	class GömKategoriLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
-			kategorilista.setVisible(false);
-		
-		
+
 		}
 	}
 	
@@ -195,12 +179,10 @@ public class KartaInterface extends JFrame {
 		JTextField beskrivningFält = new JTextField(30);
 		addDescribedPlace() {
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-			
 			JPanel rad1 = new JPanel();
 			rad1.add(new JLabel ("Namn: "));
 			rad1.add(namnFält);
 			add(rad1);
-			
 			JPanel rad2 = new JPanel();
 			rad2.add(new JLabel("Beskrivning: "));
 			rad2.add(beskrivningFält);
@@ -231,15 +213,12 @@ public class KartaInterface extends JFrame {
 			nyKnapp.setEnabled(true);
 			kartpanel.setCursor(Cursor.getDefaultCursor());
 			
-			
 			if (namedRB.isSelected()) {
 				String namn = JOptionPane.showInputDialog(KartaInterface.this, "Ange namn på platsen, tack så mkt:");
-				
 				Plats namngivenPlats = new NamngivenPlats(x, y, vald);
 				Position position = new Position(x, y);
 				platser.add(namngivenPlats);
 				kartpanel.add(namngivenPlats);
-				
 				kartpanel.validate();
 				kartpanel.repaint();
 			
@@ -252,52 +231,32 @@ public class KartaInterface extends JFrame {
 			
 			String namn = describedRuta.getName();
 			String beskrivning = describedRuta.getBeskrivning();
-			
 			Plats beskrivenPlats = new BeskrivenPlats(x, y, vald, beskrivning);
 			Position position = new Position(x, y);
 			platser.add(beskrivenPlats);
 			kartpanel.add(beskrivenPlats);
-			
 			kartpanel.validate();
 			kartpanel.repaint();
-			
 			}
 		}
 	}
-	
-	private Plats p1 = null, p2 = null;
 	
 	public class MarkeraLyss extends MouseAdapter{
 		@Override
 		public void mouseClicked (MouseEvent mev) {
-//			Plats p = (Plats)mev.getSource();
-//			if(p1 == null) {
-//				p1 =p;
-//				p1.setVisad(true);
-//			} else if (p2 == null && p!= p1) {
-//				p2 = p;
-//				p2.setVisad(true);
-//			}
-			
+			markerad =! markerad;
+			repaint();
+			Plats p = (Plats)mev.getSource();
+			markeradePlatser.add(p);
+			p.setVisible(false); //Här håller viktor på att leka lite
 		}
 	}
 
-	class GömLyss implements ActionListener{
+
+	public class GömLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
-			if (markerad = true) {
-				System.out.println("Nada markado");
-				
-				return;
-			}else {
-				System.out.println("något markat");
-			}
-//			if(visad = false) {
-//				Plats.setVisible(true); 
-//				visad = true;
-//			} else if (visad = true){ 
-//				setVisible(false);
-//				visad = false;
-//			}
+	
+
 		}
 	}
 	
@@ -309,24 +268,17 @@ public class KartaInterface extends JFrame {
 	
 	class RemoveLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
-		
-			if(markerad) {
-				System.out.println("Inget markerat");
-				return;
-			} else {
-				platser.remove(plats);
-				System.out.println("Det markerade tas bort");
 				
-//				kartpanel.remove(plats);
+//			kartpanel.remove(plats);
 				
-				// det fungerar, objektet tas bort ur listan, men tringeln visas fortfarande på kartan eftersom
-				// jag inte tar bort den från kartpanelen, eftersom jag får null pointer exception
+			// det fungerar, objektet tas bort ur listan, men tringeln visas fortfarande på kartan eftersom
+			// jag inte tar bort den från kartpanelen, eftersom jag får null pointer exception
 				
 				
 				
-				// lägga till att de även tas bort ur Hashmappen
-				repaint();
-			}
+			// lägga till att de även tas bort ur Hashmappen
+			repaint();
+			
 		}
 	}
 	
