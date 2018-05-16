@@ -51,14 +51,19 @@ public class KartaInterface extends JFrame {
 	
 		JMenuItem newMap = new JMenuItem("New Map");
 		meny.add(newMap);
+		newMap.addActionListener(new NyKartaLyss());
+		
 		JMenuItem loadPlaces = new JMenuItem("Load Places");
 		meny.add(loadPlaces);
+		
 		JMenuItem save = new JMenuItem("Save");
 		meny.add(save);
+		
 		JMenuItem exit = new JMenuItem("Exit");
 		meny.add(exit);
+		exit.addActionListener(new ExitLyss());
 		
-		newMap.addActionListener(new NyKartaLyss());
+		
 		
 		setJMenuBar(menyBar);
 		
@@ -214,7 +219,7 @@ public class KartaInterface extends JFrame {
 			kartpanel.setCursor(Cursor.getDefaultCursor());
 			
 			if (namedRB.isSelected()) {
-				String namn = JOptionPane.showInputDialog(KartaInterface.this, "Ange namn på platsen, tack så mkt:");
+				String namn = JOptionPane.showInputDialog(KartaInterface.this, "Ange namn på ny plats:");
 				Plats namngivenPlats = new NamngivenPlats(x, y, vald);
 				Position position = new Position(x, y);
 				platser.add(namngivenPlats);
@@ -255,7 +260,9 @@ public class KartaInterface extends JFrame {
 
 	public class GömLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
-	
+//			if(beskrivenPlats)
+//			kartpanel.remove(namngivenPlats);
+			repaint();
 
 		}
 	}
@@ -295,8 +302,9 @@ public class KartaInterface extends JFrame {
 	}
 	
 	class ExitLyss implements ActionListener{
+		@Override
 		public void actionPerformed(ActionEvent ave) {
-			
+			System.exit(0);
 		}
 	}
 	
