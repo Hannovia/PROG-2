@@ -22,11 +22,9 @@ public class KartaInterface extends JFrame {
 	JTextField sökFält;
 	JButton nyKnapp;
 	MusLyss musLyss = new MusLyss();
-	MarkeraLyss markeraLyss = new MarkeraLyss();
+	MarkeraLyss1 markeraLyss = new MarkeraLyss1();
 	NamngivenPlats namngivenPlats;
 	BeskrivenPlats beskrivenPlats;
-	Plats plats;
-	private boolean markerad = false;
 	
 	
 	String[] kategorier = {"Underground", "Bus", "Train"};
@@ -37,12 +35,7 @@ public class KartaInterface extends JFrame {
 	
 	KartaInterface() {
 		super("Inlupp 2: Hanna Severien, Viktor Fagerström Eriksson");
-		
 	
-		for (Plats p: platser) {
-			kartpanel.add(p);
-			p.addMouseListener(new MarkeraLyss());
-		}
 		
 		//Meny
 		menyBar = new JMenuBar();
@@ -222,6 +215,7 @@ public class KartaInterface extends JFrame {
 				String namn = JOptionPane.showInputDialog(KartaInterface.this, "Ange namn på ny plats:");
 				Plats namngivenPlats = new NamngivenPlats(x, y, vald);
 				Position position = new Position(x, y);
+				namngivenPlats.addMouseListener(markeraLyss);
 				platser.add(namngivenPlats);
 				kartpanel.add(namngivenPlats);
 				kartpanel.validate();
@@ -238,6 +232,7 @@ public class KartaInterface extends JFrame {
 			String beskrivning = describedRuta.getBeskrivning();
 			Plats beskrivenPlats = new BeskrivenPlats(x, y, vald, beskrivning);
 			Position position = new Position(x, y);
+			beskrivenPlats.addMouseListener(markeraLyss);
 			platser.add(beskrivenPlats);
 			kartpanel.add(beskrivenPlats);
 			kartpanel.validate();
@@ -246,17 +241,22 @@ public class KartaInterface extends JFrame {
 		}
 	}
 	
-	public class MarkeraLyss extends MouseAdapter{
+	public class MarkeraLyss1 extends MouseAdapter{
 		@Override
 		public void mouseClicked (MouseEvent mev) {
-			
-				markerad =! markerad;
-				repaint();
+			if (mev.getButton() == MouseEvent.BUTTON1) {
 				Plats p = (Plats)mev.getSource();
-				markeradePlatser.add(p);
-				platser.add(p);
-				p.setVisible(false); //Här håller viktor på att leka lite
-			
+				
+				if(markeradePlatser.contains(p)) {
+					markeradePlatser.remove(p);
+					System.out.println("tas bort");
+				} else {
+					markeradePlatser.add(p);
+					System.out.println("läggs till");
+				}
+//				p.setVisible(false); 
+				repaint();
+			}
 		}
 	}
 
@@ -279,10 +279,9 @@ public class KartaInterface extends JFrame {
 	
 	class RemoveLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
-			if(markerad) {
-				kartpanel.remove(plats);
+				kartpanel.remove(namngivenPlats);
 				System.out.println("test");
-			}
+			
 			
 			// det fungerar, objektet tas bort ur listan, men tringeln visas fortfarande på kartan eftersom
 			// jag inte tar bort den från kartpanelen, eftersom jag får null pointer exception

@@ -49,7 +49,6 @@ abstract public class Plats extends JComponent {
 		g.fillPolygon(xes, yes, 3);
 		
 		
-		
 		if(!markerad) {
 			return;
 		} else {
@@ -58,7 +57,6 @@ abstract public class Plats extends JComponent {
 			
 		}
 	}	
-	 
 	
 	public class MarkeraLyss extends MouseAdapter{
 		@Override
