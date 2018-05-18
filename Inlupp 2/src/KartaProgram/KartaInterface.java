@@ -213,16 +213,24 @@ public class KartaInterface extends JFrame {
 			
 			if (namedRB.isSelected()) {
 				String namn = JOptionPane.showInputDialog(KartaInterface.this, "Ange namn på ny plats:");
-				
-				System.out.println(namngivenPlats);
+				if (namn == null) {
+					return;
+				}
+				else if (namn.isEmpty()) {
+					return; //Skriv ett errormeddelande här
+				}
+				System.out.println(namn);
 				Plats namngivenPlats = new NamngivenPlats(x, y, vald);
-				System.out.println(namngivenPlats);
 				Position position = new Position(x, y);	
 				platser.add(namngivenPlats);
 				kartpanel.add(namngivenPlats);
 				namngivenPlats.addMouseListener(new MarkeraLyss1());
 				kartpanel.validate();
 				kartpanel.repaint();
+				
+				
+				
+			
 			
 			} else if (describedRB.isSelected()) {
 				addDescribedPlace describedRuta = new addDescribedPlace();
