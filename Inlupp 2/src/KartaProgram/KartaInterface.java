@@ -30,13 +30,11 @@ public class KartaInterface extends JFrame {
 	String[] kategorier = {"Underground", "Bus", "Train"};
 	JList<String> kategorilista = new JList <String>(kategorier);
 	Map<Position, Plats> koordinatlista = new HashMap<>();
-	ArrayList<Plats> platser = new ArrayList<>();
-	ArrayList<Plats> markeradePlatser = new ArrayList<>();
+	HashSet<Plats> platser = new HashSet<>();
+	HashSet<Plats> markeradePlatser = new HashSet<>();
 	
 	KartaInterface() {
-		super("Inlupp 2: Hanna Severien, Viktor Fagerström Eriksson");
-	
-		
+		super("Inlupp 2: Hanna Severien, Viktor Fagerström Eriksson");	
 		//Meny
 		menyBar = new JMenuBar();
 		meny = new JMenu("Archive");
@@ -201,23 +199,28 @@ public class KartaInterface extends JFrame {
 		public void mouseClicked(MouseEvent mev) {
 			int x = mev.getX();
 			int y = mev.getY();
+	        nyKnapp.setEnabled(true);
 			
 			String vald = kategorilista.getSelectedValue();
 			if(vald==null) {
 				vald = "Ingen";
 			}
+			//ta bort variabarna namngiven och beskriven 
+			//Plats plats i Muslyss (aka HÄR)
+			kartpanel.removeMouseListener(this);
 		
-			kartpanel.removeMouseListener(musLyss);
-			nyKnapp.setEnabled(true);
 			kartpanel.setCursor(Cursor.getDefaultCursor());
 			
 			if (namedRB.isSelected()) {
 				String namn = JOptionPane.showInputDialog(KartaInterface.this, "Ange namn på ny plats:");
+				
+				System.out.println(namngivenPlats);
 				Plats namngivenPlats = new NamngivenPlats(x, y, vald);
-				Position position = new Position(x, y);
-				namngivenPlats.addMouseListener(markeraLyss);
+				System.out.println(namngivenPlats);
+				Position position = new Position(x, y);	
 				platser.add(namngivenPlats);
 				kartpanel.add(namngivenPlats);
+				namngivenPlats.addMouseListener(new MarkeraLyss1());
 				kartpanel.validate();
 				kartpanel.repaint();
 			
@@ -232,21 +235,28 @@ public class KartaInterface extends JFrame {
 			String beskrivning = describedRuta.getBeskrivning();
 			Plats beskrivenPlats = new BeskrivenPlats(x, y, vald, beskrivning);
 			Position position = new Position(x, y);
-			beskrivenPlats.addMouseListener(markeraLyss);
+			for(Plats p:platser) {
+				//System.out.println(p.getBeskrivning());
+			}
 			platser.add(beskrivenPlats);
 			kartpanel.add(beskrivenPlats);
+			beskrivenPlats.addMouseListener(new MarkeraLyss1());
 			kartpanel.validate();
 			kartpanel.repaint();
+			for(Plats p:platser) {
+				//System.out.println(p.getBeskrivning());
 			}
+			}
+			
 		}
 	}
 	
 	public class MarkeraLyss1 extends MouseAdapter{
 		@Override
 		public void mouseClicked (MouseEvent mev) {
+			
+			Plats p = (Plats)mev.getSource();
 			if (mev.getButton() == MouseEvent.BUTTON1) {
-				Plats p = (Plats)mev.getSource();
-				
 				if(markeradePlatser.contains(p)) {
 					markeradePlatser.remove(p);
 					System.out.println("tas bort");
@@ -256,6 +266,8 @@ public class KartaInterface extends JFrame {
 				}
 //				p.setVisible(false); 
 				repaint();
+			} else if(mev.getButton() == MouseEvent.BUTTON3) {
+				p.getBeskrivning();
 			}
 		}
 	}
@@ -264,33 +276,62 @@ public class KartaInterface extends JFrame {
 	public class GömLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
 			
-			kartpanel.remove(namngivenPlats);
-			kartpanel.repaint();
-			kartpanel.validate();
-
+			for(Plats p: markeradePlatser) {
+				p.setVisible(false);
+			}
+				markeradePlatser.clear();
+				kartpanel.repaint();
+		}
+	}
+	
+	class AddKoordinatRuta extends JPanel{
+		JTextField xFält = new JTextField(6);
+		JTextField yFält = new JTextField(6);
+		
+		AddKoordinatRuta(){
+			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+			
+			JPanel rad1 = new JPanel();
+			rad1.add(new JLabel ("X: "));
+			rad1.add(xFält);
+			
+			JPanel rad2 = new JPanel();
+			rad2.add(new JLabel("Y: "));
+			rad2.add(yFält);
+			
+			add(rad1);
+			add(rad2);
+		}
+		
+		public int getX() {
+			return Integer.parseInt(xFält.getText());
+		}
+		
+		public int getY() {
+			return Integer.parseInt(yFält.getText());
 		}
 	}
 	
 	class KoordinaterLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
-			
+			AddKoordinatRuta koordinatRuta = new AddKoordinatRuta();
+			int svar = JOptionPane.showConfirmDialog(KartaInterface.this, koordinatRuta, "Skriv koordinater", JOptionPane.OK_CANCEL_OPTION);
+		
+			int xKoordinat = koordinatRuta.getX();
+			int yKoordinat = koordinatRuta.getY();
 		}
 	}
 	
 	class RemoveLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
-				kartpanel.remove(namngivenPlats);
-				System.out.println("test");
-			
-			
-			// det fungerar, objektet tas bort ur listan, men tringeln visas fortfarande på kartan eftersom
-			// jag inte tar bort den från kartpanelen, eftersom jag får null pointer exception
+				for(Plats p: markeradePlatser) {
+					kartpanel.remove(p);
+					platser.remove(p);
+				}
+				markeradePlatser.clear();
+				repaint();
 				
-				
-				
-			// lägga till att de även tas bort ur Hashmappen
-			repaint();
-			
+				// det ska även tas bort ur hashmappen?
 		}
 	}
 	

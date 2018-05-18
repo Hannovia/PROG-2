@@ -7,20 +7,23 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 abstract public class Plats extends JComponent {
-	String vald;
+	String vald; 
 	private boolean markerad = false;
-	
-	abstract public String getBeskrivning();
+
+	abstract public void getBeskrivning();
 
 	public Plats(int x, int y, String vald) {
 		this.vald = vald;
-		addMouseListener(new MarkeraLyss());
+		//addMouseListener(new MarkeraLyss());
 		setBounds(x-25,y-50,50,50);
 	}
 	
-	public String toString() {
-		return getBeskrivning(); 
+	/*
+	@Override
+	public String toString() {	
+		return "Namn : " +  "Beskrivning: " + getBeskrivning();
 	}
+	*/
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -44,33 +47,32 @@ abstract public class Plats extends JComponent {
 				g.setColor(Color.BLACK);
 				repaint();
 				break;
-			
 		}
 		g.fillPolygon(xes, yes, 3);
-		
 		
 		if(!markerad) {
 			return;
 		} else {
 			g.setColor(Color.MAGENTA);
 			g.drawRect(0, 0, 49, 49);
-			
 		}
 	}	
-	
+	/*
 	public class MarkeraLyss extends MouseAdapter{
 		@Override
 		public void mouseClicked (MouseEvent mev) {
-			
 			if (mev.getButton() == MouseEvent.BUTTON3) {
-				JOptionPane.showMessageDialog(Plats.this, toString());
-				
+				Plats temp = Plats.this;
+				System.out.print(mev.getSource().getClass());
+			    mev.getSource().getClass().cast(temp);
+			    JOptionPane.showMessageDialog(Plats.this, temp);
 			} else if (mev.getButton() == MouseEvent.BUTTON1) {
 				markerad =! markerad;
 				repaint();
 			} 
 		}
 	}
+	*/
 	
 	public void setVisad (boolean to) {
 		markerad = to;
