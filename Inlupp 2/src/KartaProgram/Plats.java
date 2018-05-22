@@ -8,22 +8,25 @@ import java.awt.Graphics;
 
 abstract public class Plats extends JComponent {
 	String vald; 
+	String namn;
 	private boolean markerad = false;
 
 	abstract public void getBeskrivning();
-
-	public Plats(int x, int y, String vald) {
+	abstract public String toString();
+	
+	public Plats(int x, int y, String vald, String namn) {
 		this.vald = vald;
-		//addMouseListener(new MarkeraLyss());
+		this.namn = namn;
 		setBounds(x-25,y-50,50,50);
 	}
 	
-	/*
-	@Override
-	public String toString() {	
-		return "Namn : " +  "Beskrivning: " + getBeskrivning();
+	
+	public void setMarkerad() {
+		if(markerad)
+			markerad = false;
+		else
+			markerad = true;
 	}
-	*/
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -57,22 +60,6 @@ abstract public class Plats extends JComponent {
 			g.drawRect(0, 0, 49, 49);
 		}
 	}	
-	/*
-	public class MarkeraLyss extends MouseAdapter{
-		@Override
-		public void mouseClicked (MouseEvent mev) {
-			if (mev.getButton() == MouseEvent.BUTTON3) {
-				Plats temp = Plats.this;
-				System.out.print(mev.getSource().getClass());
-			    mev.getSource().getClass().cast(temp);
-			    JOptionPane.showMessageDialog(Plats.this, temp);
-			} else if (mev.getButton() == MouseEvent.BUTTON1) {
-				markerad =! markerad;
-				repaint();
-			} 
-		}
-	}
-	*/
 	
 	public void setVisad (boolean to) {
 		markerad = to;

@@ -10,6 +10,7 @@ import java.util.*;
 
 // TO-DO-LIST
 // - när remove-knappen går igenom listan ska den endast gå igenom en lista med markeade objekt, inte alla objekt
+// Kunna avmarkera i listan över kategorier
 
 public class KartaInterface extends JFrame {
 	KartPanel kartpanel = null;
@@ -22,7 +23,7 @@ public class KartaInterface extends JFrame {
 	JTextField sökFält;
 	JButton nyKnapp;
 	MusLyss musLyss = new MusLyss();
-	MarkeraLyss1 markeraLyss = new MarkeraLyss1();
+	MarkeraLyss markeraLyss = new MarkeraLyss();
 	NamngivenPlats namngivenPlats;
 	BeskrivenPlats beskrivenPlats;
 	
@@ -32,6 +33,9 @@ public class KartaInterface extends JFrame {
 	Map<Position, Plats> koordinatlista = new HashMap<>();
 	HashSet<Plats> platser = new HashSet<>();
 	HashSet<Plats> markeradePlatser = new HashSet<>();
+	
+	DefaultListModel<String> listModel = new DefaultListModel<>();
+	JList<String> söklista = new JList<>(listModel);
 	
 	KartaInterface() {
 		super("Inlupp 2: Hanna Severien, Viktor Fagerström Eriksson");	
@@ -53,9 +57,6 @@ public class KartaInterface extends JFrame {
 		JMenuItem exit = new JMenuItem("Exit");
 		meny.add(exit);
 		exit.addActionListener(new ExitLyss());
-		
-		
-		
 		setJMenuBar(menyBar);
 		
 		
@@ -150,9 +151,9 @@ public class KartaInterface extends JFrame {
 	
 	class SökaLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
-			String sökOrd = sökFält.getText();
-//			String def = uppslag.get(sökOrd);
-//			display.setText(def);
+//			String sökOrd = sökFält.getText();
+//			if(sökOrd.equals(""))
+//				sökOrd = platser.getSelectedItem();
 		}
 	}
 	
@@ -185,10 +186,6 @@ public class KartaInterface extends JFrame {
 			add(rad2);
 		}
 		
-		public String getNamn() {
-			return namnFält.getText();
-		}
-		
 		public String getBeskrivning() {
 			return beskrivningFält.getText();
 		}
@@ -199,67 +196,62 @@ public class KartaInterface extends JFrame {
 		public void mouseClicked(MouseEvent mev) {
 			int x = mev.getX();
 			int y = mev.getY();
-	        nyKnapp.setEnabled(true);
-			
+			nyKnapp.setEnabled(true);
+
 			String vald = kategorilista.getSelectedValue();
-			if(vald==null) {
+			if (vald == null) {
 				vald = "Ingen";
 			}
-			//ta bort variabarna namngiven och beskriven 
-			//Plats plats i Muslyss (aka HÄR)
+			// ta bort variabarna namngiven och beskriven
+			// Plats plats i Muslyss (aka HÄR)
 			kartpanel.removeMouseListener(this);
-		
+
 			kartpanel.setCursor(Cursor.getDefaultCursor());
-			
+
 			if (namedRB.isSelected()) {
 				String namn = JOptionPane.showInputDialog(KartaInterface.this, "Ange namn på ny plats:");
 				if (namn == null) {
 					return;
-				}
-				else if (namn.isEmpty()) {
-					return; //Skriv ett errormeddelande här
+				} else if (namn.isEmpty()) {
+					return; // Skriv ett errormeddelande här
 				}
 				System.out.println(namn);
-				Plats namngivenPlats = new NamngivenPlats(x, y, vald);
-				Position position = new Position(x, y);	
+				Plats namngivenPlats = new NamngivenPlats(x, y, vald, namn);
+				Position position = new Position(x, y);
 				platser.add(namngivenPlats);
 				kartpanel.add(namngivenPlats);
-				namngivenPlats.addMouseListener(new MarkeraLyss1());
+				namngivenPlats.addMouseListener(new MarkeraLyss());
 				kartpanel.validate();
 				kartpanel.repaint();
-				
-				
-				
-			
-			
+
 			} else if (describedRB.isSelected()) {
 				addDescribedPlace describedRuta = new addDescribedPlace();
-				int svar = JOptionPane.showConfirmDialog(KartaInterface.this,  describedRuta, "Ny ruta", JOptionPane.OK_CANCEL_OPTION);
-			
-			if (svar != JOptionPane.OK_OPTION)
-				return;
-			
-			String namn = describedRuta.getName();
-			String beskrivning = describedRuta.getBeskrivning();
-			Plats beskrivenPlats = new BeskrivenPlats(x, y, vald, beskrivning);
-			Position position = new Position(x, y);
-			for(Plats p:platser) {
-				//System.out.println(p.getBeskrivning());
+				int svar = JOptionPane.showConfirmDialog(KartaInterface.this, describedRuta, "Ny ruta",
+						JOptionPane.OK_CANCEL_OPTION);
+
+				if (svar != JOptionPane.OK_OPTION)
+					return;
+
+				String namn = describedRuta.namnFält.getText();
+				String beskrivning = describedRuta.getBeskrivning();
+				Plats beskrivenPlats = new BeskrivenPlats(x, y, vald, beskrivning, namn);
+				Position position = new Position(x, y);
+				for (Plats p : platser) {
+					// System.out.println(p.getBeskrivning());
+				}
+				platser.add(beskrivenPlats);
+				kartpanel.add(beskrivenPlats);
+				beskrivenPlats.addMouseListener(new MarkeraLyss());
+				kartpanel.validate();
+				kartpanel.repaint();
+				for (Plats p : platser) {
+					// System.out.println(p.getBeskrivning());
+				}
 			}
-			platser.add(beskrivenPlats);
-			kartpanel.add(beskrivenPlats);
-			beskrivenPlats.addMouseListener(new MarkeraLyss1());
-			kartpanel.validate();
-			kartpanel.repaint();
-			for(Plats p:platser) {
-				//System.out.println(p.getBeskrivning());
-			}
-			}
-			
 		}
 	}
-	
-	public class MarkeraLyss1 extends MouseAdapter{
+
+	public class MarkeraLyss extends MouseAdapter{
 		@Override
 		public void mouseClicked (MouseEvent mev) {
 			
@@ -268,18 +260,20 @@ public class KartaInterface extends JFrame {
 				if(markeradePlatser.contains(p)) {
 					markeradePlatser.remove(p);
 					System.out.println("tas bort");
+					p.setMarkerad();
+					repaint();
 				} else {
 					markeradePlatser.add(p);
 					System.out.println("läggs till");
+					p.setMarkerad();
+					repaint();
 				}
-//				p.setVisible(false); 
 				repaint();
 			} else if(mev.getButton() == MouseEvent.BUTTON3) {
 				p.getBeskrivning();
 			}
 		}
 	}
-
 
 	public class GömLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
@@ -291,13 +285,14 @@ public class KartaInterface extends JFrame {
 				kartpanel.repaint();
 		}
 	}
+
 	
 	class AddKoordinatRuta extends JPanel{
 		JTextField xFält = new JTextField(6);
 		JTextField yFält = new JTextField(6);
 		
 		AddKoordinatRuta(){
-			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+			setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 			
 			JPanel rad1 = new JPanel();
 			rad1.add(new JLabel ("X: "));
@@ -311,12 +306,12 @@ public class KartaInterface extends JFrame {
 			add(rad2);
 		}
 		
-		public int getX() {
-			return Integer.parseInt(xFält.getText());
+		public int getXFält() {
+			return Integer.parseInt(this.xFält.getText());
 		}
 		
-		public int getY() {
-			return Integer.parseInt(yFält.getText());
+		public int getYFält() {
+			return Integer.parseInt(this.yFält.getText());
 		}
 	}
 	

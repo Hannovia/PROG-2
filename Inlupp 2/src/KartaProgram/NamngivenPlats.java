@@ -5,18 +5,27 @@ import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 
 public class NamngivenPlats extends Plats {
 
-	public NamngivenPlats(int x, int y, String vald) {
-		super(x, y, vald);
+	public NamngivenPlats(int x, int y, String vald, String namn) {
+		super(x, y, vald, namn);
 	}
 
+	public String toString() {
+		return " {" + getX() + ", " + getY() + "}";
+	}
+	
 	@Override
 	public void getBeskrivning() {
-		JOptionPane.showMessageDialog(null, "PLATS NAMN HÄR", "Platsinfo: ", JOptionPane.INFORMATION_MESSAGE);
+		JPanel infoPanel = new JPanel();
+		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
+		JPanel namnPanel = new JPanel();
+		JLabel namnLabel = new JLabel("Name: " + namn + toString());
+		namnPanel.add(namnLabel);
+		infoPanel.add(namnPanel);
+		JOptionPane.showMessageDialog(null, infoPanel, "Platsinfo: ", JOptionPane.INFORMATION_MESSAGE);
 	}
-
 }

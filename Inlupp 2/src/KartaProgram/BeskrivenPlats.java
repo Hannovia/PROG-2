@@ -11,21 +11,27 @@ public class BeskrivenPlats extends Plats {
 
 	private String beskrivning;
 	
-	public BeskrivenPlats(int x, int y, String vald, String beskrivning) {
-		super(x, y, vald);
+	public BeskrivenPlats(int x, int y, String vald, String beskrivning, String namn) {
+		super(x, y, vald, namn);
 		this.beskrivning=beskrivning;
+	}
+
+	
+	public String toString() {
+		return  " {" + getX() + ", " + getY() + "}";
 	}
 	
 	
+	@Override
 	public void getBeskrivning() {
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
 		JPanel namnPanel = new JPanel();
-		JLabel namnLabel = new JLabel("NAMN HÄR");
+		JLabel namnLabel = new JLabel("Name: " + namn + toString());
 		namnPanel.add(namnLabel);
 		infoPanel.add(namnPanel);
 		JPanel beskrivningPanel = new JPanel();
-		JLabel beskrivningLabel = new JLabel("BESKRIVNING HÄR");
+		JLabel beskrivningLabel = new JLabel("Description: " + beskrivning);
 		beskrivningPanel.add(beskrivningLabel);
 		infoPanel.add(beskrivningPanel);
 		JOptionPane.showMessageDialog(null, infoPanel, "Platsinfo: ", JOptionPane.INFORMATION_MESSAGE);
