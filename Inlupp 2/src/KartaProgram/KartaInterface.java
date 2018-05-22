@@ -24,9 +24,6 @@ public class KartaInterface extends JFrame {
 	JButton nyKnapp;
 	MusLyss musLyss = new MusLyss();
 	MarkeraLyss markeraLyss = new MarkeraLyss();
-	NamngivenPlats namngivenPlats;
-	BeskrivenPlats beskrivenPlats;
-	
 	
 	String[] kategorier = {"Underground", "Bus", "Train"};
 	JList<String> kategorilista = new JList <String>(kategorier);
@@ -190,6 +187,9 @@ public class KartaInterface extends JFrame {
 			return beskrivningFält.getText();
 		}
 	}
+//	private void add(Plats plats) {
+//		koordinatlista.put(plats.Position(x, y));
+//	}
 	
 	class MusLyss extends MouseAdapter {
 		@Override
@@ -202,8 +202,7 @@ public class KartaInterface extends JFrame {
 			if (vald == null) {
 				vald = "Ingen";
 			}
-			// ta bort variabarna namngiven och beskriven
-			// Plats plats i Muslyss (aka HÄR)
+
 			kartpanel.removeMouseListener(this);
 
 			kartpanel.setCursor(Cursor.getDefaultCursor());
@@ -215,6 +214,7 @@ public class KartaInterface extends JFrame {
 				} else if (namn.isEmpty()) {
 					return; // Skriv ett errormeddelande här
 				}
+				
 				System.out.println(namn);
 				Plats namngivenPlats = new NamngivenPlats(x, y, vald, namn);
 				Position position = new Position(x, y);
@@ -236,17 +236,13 @@ public class KartaInterface extends JFrame {
 				String beskrivning = describedRuta.getBeskrivning();
 				Plats beskrivenPlats = new BeskrivenPlats(x, y, vald, beskrivning, namn);
 				Position position = new Position(x, y);
-				for (Plats p : platser) {
-					// System.out.println(p.getBeskrivning());
-				}
+	
 				platser.add(beskrivenPlats);
 				kartpanel.add(beskrivenPlats);
 				beskrivenPlats.addMouseListener(new MarkeraLyss());
 				kartpanel.validate();
 				kartpanel.repaint();
-				for (Plats p : platser) {
-					// System.out.println(p.getBeskrivning());
-				}
+		
 			}
 		}
 	}
