@@ -28,6 +28,7 @@ public class KartaInterface extends JFrame {
 	int x;
 	int y;
 	
+	
 	String[] kategorier = {"Underground", "Bus", "Train"};
 	JList<String> kategorilista = new JList <String>(kategorier);
 	Map<Position, Plats> koordinatlista = new HashMap<>();
@@ -358,7 +359,16 @@ public class KartaInterface extends JFrame {
 				String line;
 				while ((line = br.readLine()) != null) {
 					String [] tokens = line.split(",");
-					String namn = tokens[0];
+					String typ = getTyp(tokens[0]);
+					valdKategori = somethingsomething(tokens[1]);
+					String namn = tokens[1];
+					x = getX(tokens[2]);
+					y = getX(tokens[3]);
+					Position pos = Position.parsePosition(tokens[2]);
+					String beskrivning = getBeskrivningText(tokens[4]);
+					
+					Plats p = new Plats(typ, valdKategori, namn, x, y, beskrivning);
+					AddPerson(p);
 				}
 				in.close();
 				br.close();
