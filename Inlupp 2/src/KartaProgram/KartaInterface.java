@@ -50,6 +50,7 @@ public class KartaInterface extends JFrame {
 		
 		JMenuItem save = new JMenuItem("Save");
 		meny.add(save);
+		save.addActionListener(new SparaLyss());
 		
 		JMenuItem exit = new JMenuItem("Exit");
 		meny.add(exit);
@@ -58,7 +59,7 @@ public class KartaInterface extends JFrame {
 		
 		
 		// Filväljare
-		FileFilter ff = new FileNameExtensionFilter("Bilder", "jpg", "gif", "png");
+		FileFilter ff = new FileNameExtensionFilter("Bilder", "jpg", "txt", "png");
 		filVäljare.setFileFilter(ff);
 		
 		
@@ -342,29 +343,41 @@ public class KartaInterface extends JFrame {
 	
 	class SparaLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
-			spara();
+			spara(koordinatlista);
 		}
 	}
+	
+//	for place p : alla.values
+//	instanceof namedplace
+//	if 
+//		p.getkategori p.getpos p.getnamne 
+//	else 
+//		filewrite utfil = new filewriter file.getname
 
-	void spara(Map<String, String> vad) {
+	void spara(Map<Position, Plats> vad) {
 		int svar = filVäljare.showSaveDialog(KartaInterface.this);
 		if (svar == JFileChooser.APPROVE_OPTION) {
 			File f = filVäljare.getSelectedFile();
 			String filnamn = f.getAbsolutePath();
 
 			try {
-				FileOutputStream fos = new FileOutputStream(filnamn);
-				ObjectOutputStream oos = new ObjectOutputStream(fos);
-				oos.writeObject(koordinatlista);
-				oos.close();
-				fos.close();
-			} catch (FileNotFoundException fnfe) {
-				System.err.println("Filen går ej att skriva!");
-			} catch (IOException ioe) {
-				System.err.println("Fel har inträffat!");
+				FileWriter utfil = new FileWriter("jarva.txt");
+				PrintWriter out = new PrintWriter(utfil);
+				for (Plats p : platser)
+					System.out.println(p.getX() + ", " + p.getY() + ", " + p.namn);
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(KartaInterface.this,  "Fel");
 			}
 		}
-
+//		FileOutputStream fos = new FileOutputStream(filnamn);
+//		ObjectOutputStream oos = new ObjectOutputStream(fos);
+//		oos.writeObject(koordinatlista);
+//		oos.close();
+//		fos.close();
+//	} catch (FileNotFoundException fnfe) {
+//		System.err.println("Filen går ej att skriva!");
+//	} catch (IOException ioe) {
+//		System.err.println("Fel har inträffat!");
 	}
 	class ExitLyss implements ActionListener{
 		@Override

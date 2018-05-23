@@ -11,8 +11,8 @@ public class BeskrivenPlats extends Plats {
 
 	private String beskrivning;
 	
-	public BeskrivenPlats(int x, int y, String vald, String beskrivning, String namn) {
-		super(x, y, vald, namn);
+	public BeskrivenPlats(int x, int y, String vald, String namn, String kategori, String beskrivning) {
+		super(x, y, vald, namn, kategori);
 		this.beskrivning=beskrivning;
 	}
 

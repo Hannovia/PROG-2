@@ -9,18 +9,19 @@ import java.awt.Graphics;
 abstract public class Plats extends JComponent {
 	String vald; 
 	String namn;
+	String kategori;
 	private boolean markerad = false;
 
 	abstract public void getBeskrivning();
 	abstract public String toString();
-	
-	public Plats(int x, int y, String vald, String namn) {
+
+	public Plats(int x, int y, String vald, String namn, String kategori) {
+		// TODO Auto-generated constructor stub
 		this.vald = vald;
 		this.namn = namn;
+		this.kategori = kategori;
 		setBounds(x-25,y-50,50,50);
 	}
-	
-	
 	public void setMarkerad() {
 		if(markerad)
 			markerad = false;
