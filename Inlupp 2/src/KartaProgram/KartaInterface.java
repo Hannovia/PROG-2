@@ -25,7 +25,8 @@ public class KartaInterface extends JFrame {
 	JButton nyKnapp;
 	MusLyss musLyss = new MusLyss();
 	MarkeraLyss markeraLyss = new MarkeraLyss();
-	MouseEvent mev;
+	int x;
+	int y;
 	
 	String[] kategorier = {"Underground", "Bus", "Train"};
 	JList<String> kategorilista = new JList <String>(kategorier);
@@ -197,13 +198,15 @@ public class KartaInterface extends JFrame {
 	class MusLyss extends MouseAdapter {
 		@Override
 		public void mouseClicked(MouseEvent mev) {
+			x = mev.getX();
+			y = mev.getY();
 			AddPlats();
+			kartpanel.removeMouseListener(this);
 		}
 	}
 	
 	public void AddPlats() {
-		int x = mev.getX();
-		int y = mev.getY();
+		
 		nyKnapp.setEnabled(true);
 
 		valdKategori = kategorilista.getSelectedValue();
@@ -211,8 +214,7 @@ public class KartaInterface extends JFrame {
 			valdKategori = "Ingen";
 		}
 		
-		kartpanel.removeMouseListener(this);
-
+	
 		kartpanel.setCursor(Cursor.getDefaultCursor());
 
 		if (namedRB.isSelected()) {
