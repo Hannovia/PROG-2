@@ -342,10 +342,30 @@ public class KartaInterface extends JFrame {
 	
 	class SparaLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
-			
+			spara();
 		}
 	}
-	
+
+	void spara(Map<String, String> vad) {
+		int svar = filVäljare.showSaveDialog(KartaInterface.this);
+		if (svar == JFileChooser.APPROVE_OPTION) {
+			File f = filVäljare.getSelectedFile();
+			String filnamn = f.getAbsolutePath();
+
+			try {
+				FileOutputStream fos = new FileOutputStream(filnamn);
+				ObjectOutputStream oos = new ObjectOutputStream(fos);
+				oos.writeObject(koordinatlista);
+				oos.close();
+				fos.close();
+			} catch (FileNotFoundException fnfe) {
+				System.err.println("Filen går ej att skriva!");
+			} catch (IOException ioe) {
+				System.err.println("Fel har inträffat!");
+			}
+		}
+
+	}
 	class ExitLyss implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent ave) {
