@@ -11,16 +11,23 @@ public class BeskrivenPlats extends Plats {
 
 	private String beskrivning;
 	
-	public BeskrivenPlats(int x, int y, String vald, String namn, String kategori, String beskrivning) {
-		super(x, y, vald, namn, kategori);
+	public BeskrivenPlats(int x, int y, String vald, String namn, String kategori, String typ) {
+		super(x, y, vald, namn, typ);
 		this.beskrivning=beskrivning;
 	}
 
 	
 	public String toString() {
-		return  " {" + getX() + ", " + getY() + "}";
+		return  getTyp() + ":" + " {" + getX() + ", " + getY() + "}";
 	}
 	
+	public String getTyp() {
+		return "Described";
+	}
+	
+	public String getBeskrivningText() {
+		return beskrivning;
+	}
 	
 	@Override
 	public void getBeskrivning() {

@@ -10,12 +10,20 @@ import javax.swing.*;
 
 public class NamngivenPlats extends Plats {
 
-	public NamngivenPlats(int x, int y, String vald, String namn, String kategori) {
-		super(x, y, vald, namn, kategori);
+	public NamngivenPlats(int x, int y, String vald, String namn, String typ) {
+		super(x, y, vald, namn, typ);
 	}
 
 	public String toString() {
-		return " {" + getX() + ", " + getY() + "}";
+		return getTyp() + ":" + " {" + getX() + ", " + getY() + "}";
+	}
+	
+	public String getTyp() {
+		return "Named";
+	}
+
+	public String getBeskrivningText() {
+		return null;
 	}
 	
 	@Override
@@ -28,4 +36,5 @@ public class NamngivenPlats extends Plats {
 		infoPanel.add(namnPanel);
 		JOptionPane.showMessageDialog(null, infoPanel, "Platsinfo: ", JOptionPane.INFORMATION_MESSAGE);
 	}
+
 }

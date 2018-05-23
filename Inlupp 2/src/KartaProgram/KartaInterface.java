@@ -10,7 +10,7 @@ import java.util.*;
 
 // TO-DO-LIST
 // - när remove-knappen går igenom listan ska den endast gå igenom en lista med markeade objekt, inte alla objekt
-// Kunna avmarkera i listan över kategorier
+//- Om det finns osparade ändringar när man trycker exit ska programmet fråga om man vill spara
 
 public class KartaInterface extends JFrame {
 	KartPanel kartpanel = null;
@@ -21,9 +21,11 @@ public class KartaInterface extends JFrame {
 	JMenuBar menyBar;
 	JMenu meny;
 	JTextField sökFält;
+	String valdKategori;
 	JButton nyKnapp;
 	MusLyss musLyss = new MusLyss();
 	MarkeraLyss markeraLyss = new MarkeraLyss();
+	MouseEvent mev;
 	
 	String[] kategorier = {"Underground", "Bus", "Train"};
 	JList<String> kategorilista = new JList <String>(kategorier);
@@ -59,7 +61,7 @@ public class KartaInterface extends JFrame {
 		
 		
 		// Filväljare
-		FileFilter ff = new FileNameExtensionFilter("Bilder", "jpg", "txt", "png");
+		FileFilter ff = new FileNameExtensionFilter("Textfil", "jpg", "txt", "png");
 		filVäljare.setFileFilter(ff);
 		
 		
@@ -195,58 +197,69 @@ public class KartaInterface extends JFrame {
 	class MusLyss extends MouseAdapter {
 		@Override
 		public void mouseClicked(MouseEvent mev) {
-			int x = mev.getX();
-			int y = mev.getY();
-			nyKnapp.setEnabled(true);
-
-			String vald = kategorilista.getSelectedValue();
-			if (vald == null) {
-				vald = "Ingen";
-			}
-
-			kartpanel.removeMouseListener(this);
-
-			kartpanel.setCursor(Cursor.getDefaultCursor());
-
-			if (namedRB.isSelected()) {
-				String namn = JOptionPane.showInputDialog(KartaInterface.this, "Ange namn på ny plats:");
-				if (namn == null) {
-					return;
-				} else if (namn.isEmpty()) {
-					return; // Skriv ett errormeddelande här
-				}
-				
-				System.out.println(namn);
-				Plats namngivenPlats = new NamngivenPlats(x, y, vald, namn);
-				Position position = new Position(x, y);
-				platser.add(namngivenPlats);
-				kartpanel.add(namngivenPlats);
-				namngivenPlats.addMouseListener(new MarkeraLyss());
-				kartpanel.validate();
-				kartpanel.repaint();
-
-			} else if (describedRB.isSelected()) {
-				addDescribedPlace describedRuta = new addDescribedPlace();
-				int svar = JOptionPane.showConfirmDialog(KartaInterface.this, describedRuta, "Ny ruta",
-						JOptionPane.OK_CANCEL_OPTION);
-
-				if (svar != JOptionPane.OK_OPTION)
-					return;
-
-				String namn = describedRuta.namnFält.getText();
-				String beskrivning = describedRuta.getBeskrivning();
-				Plats beskrivenPlats = new BeskrivenPlats(x, y, vald, beskrivning, namn);
-				Position position = new Position(x, y);
-	
-				platser.add(beskrivenPlats);
-				kartpanel.add(beskrivenPlats);
-				beskrivenPlats.addMouseListener(new MarkeraLyss());
-				kartpanel.validate();
-				kartpanel.repaint();
-		
-			}
+			AddPlats();
 		}
 	}
+	
+	public void AddPlats() {
+		int x = mev.getX();
+		int y = mev.getY();
+		nyKnapp.setEnabled(true);
+
+		valdKategori = kategorilista.getSelectedValue();
+		if (valdKategori == null) {
+			valdKategori = "Ingen";
+		}
+		
+		kartpanel.removeMouseListener(this);
+
+		kartpanel.setCursor(Cursor.getDefaultCursor());
+
+		if (namedRB.isSelected()) {
+			String namn = JOptionPane.showInputDialog(KartaInterface.this, "Ange namn på ny plats:");
+			if (namn == null) {
+				return;
+			} else if (namn.isEmpty()) {
+				return; // Skriv ett errormeddelande här
+			}
+			
+			System.out.println(valdKategori);
+			String typ = "Named";
+			
+			Plats namngivenPlats = new NamngivenPlats(x, y, valdKategori, namn, typ);
+			Position position = new Position(x, y);
+			platser.add(namngivenPlats);
+			kartpanel.add(namngivenPlats);
+			namngivenPlats.addMouseListener(new MarkeraLyss());
+			kartpanel.validate();
+			kartpanel.repaint();
+
+		} else if (describedRB.isSelected()) {
+			addDescribedPlace describedRuta = new addDescribedPlace();
+			int svar = JOptionPane.showConfirmDialog(KartaInterface.this, describedRuta, "Ny ruta",
+					JOptionPane.OK_CANCEL_OPTION);
+
+			if (svar != JOptionPane.OK_OPTION)
+				return;
+
+			String namn = describedRuta.namnFält.getText();
+			String beskrivning = describedRuta.getBeskrivning();
+			String typ = "Described";
+			
+			
+			Plats beskrivenPlats = new BeskrivenPlats(x, y, valdKategori, beskrivning, namn, typ);
+			Position position = new Position(x, y);
+		
+			platser.add(beskrivenPlats);
+			kartpanel.add(beskrivenPlats);
+			beskrivenPlats.addMouseListener(new MarkeraLyss());
+			kartpanel.validate();
+			kartpanel.repaint();
+	
+		}
+	}
+	
+
 
 	public class MarkeraLyss extends MouseAdapter{
 		@Override
@@ -337,7 +350,22 @@ public class KartaInterface extends JFrame {
 	
 	class LaddaPlatserLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
-			
+			try {
+				FileReader in = new FileReader("LitePlatser.txt"); // Vi måste fråga användaren om filnamnet
+				BufferedReader br = new BufferedReader(in);
+				String line;
+				while ((line = br.readLine()) != null) {
+					String [] tokens = line.split(",");
+					String namn = tokens[0];
+				}
+				in.close();
+				br.close();
+				
+				} catch(FileNotFoundException e) {
+					JOptionPane.showMessageDialog(KartaInterface.this, "Fil kan ej öppnas");
+				} catch (IOException e) {
+					JOptionPane.showMessageDialog(KartaInterface.this, "Fel");
+				}
 		}
 	}
 	
@@ -361,23 +389,22 @@ public class KartaInterface extends JFrame {
 			String filnamn = f.getAbsolutePath();
 
 			try {
-				FileWriter utfil = new FileWriter("jarva.txt");
+				FileWriter utfil = new FileWriter("LitePlatser.txt");
 				PrintWriter out = new PrintWriter(utfil);
-				for (Plats p : platser)
-					System.out.println(p.getX() + ", " + p.getY() + ", " + p.namn);
-			} catch (IOException e) {
-				JOptionPane.showMessageDialog(KartaInterface.this,  "Fel");
+				for (Plats p : platser) 
+					if (p instanceof NamngivenPlats) {
+						out.println(p.typ + "," + p.valdKategori + "," + p.namn + "," + p.getX() + "," + p.getY());
+					} else {
+						out.println(p.typ + "," + p.valdKategori + "," 
+					+ p.namn + "," + p.getX() + "," + p.getY() + "," + p.getBeskrivningText());
+					}
+					out.close();
+				}
+			 catch (IOException e) {
+				JOptionPane.showMessageDialog(KartaInterface.this, "Fel");
 			}
 		}
-//		FileOutputStream fos = new FileOutputStream(filnamn);
-//		ObjectOutputStream oos = new ObjectOutputStream(fos);
-//		oos.writeObject(koordinatlista);
-//		oos.close();
-//		fos.close();
-//	} catch (FileNotFoundException fnfe) {
-//		System.err.println("Filen går ej att skriva!");
-//	} catch (IOException ioe) {
-//		System.err.println("Fel har inträffat!");
+
 	}
 	class ExitLyss implements ActionListener{
 		@Override

@@ -1,0 +1,4 @@
+Described,Ingen,Det är mörkt och mamma luktar sprit,581,199,null
+Named,Ingen,Hej,382,267
+Described,Train,Kallt rum, kallare föräldrar,168,47,null
+Described,Bus,Jonathan var ofta rädd för att komma hem,507,6,null

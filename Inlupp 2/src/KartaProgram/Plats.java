@@ -7,19 +7,20 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 abstract public class Plats extends JComponent {
-	String vald; 
+	String valdKategori; 
 	String namn;
-	String kategori;
+	String typ;
 	private boolean markerad = false;
 
 	abstract public void getBeskrivning();
 	abstract public String toString();
+	abstract public String getTyp();
+	abstract public String getBeskrivningText();
 
-	public Plats(int x, int y, String vald, String namn, String kategori) {
-		// TODO Auto-generated constructor stub
-		this.vald = vald;
+	public Plats(int x, int y, String valdKategori, String namn, String typ) {
+		this.valdKategori = valdKategori;
 		this.namn = namn;
-		this.kategori = kategori;
+		this.typ = typ;
 		setBounds(x-25,y-50,50,50);
 	}
 	public void setMarkerad() {
@@ -34,7 +35,7 @@ abstract public class Plats extends JComponent {
 			int[] xes = {25, 0, 50};
 			int[] yes = {50, 0, 0};
 	
-		switch(vald) {
+		switch(valdKategori) {
 			case "Underground":
 				g.setColor(Color.BLUE);
 				repaint();
