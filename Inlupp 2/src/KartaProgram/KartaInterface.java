@@ -37,7 +37,6 @@ public class KartaInterface extends JFrame {
 	HashSet<Plats> platser = new HashSet<>();
 	HashSet<Plats> markeradePlatser = new HashSet<>();
 	
-	//Viktor lek
 	
 	KartaInterface() {
 		super("Inlupp 2: Hanna Severien, Viktor Fagerström Eriksson");	
@@ -163,8 +162,10 @@ public class KartaInterface extends JFrame {
 	
 			String sökOrd = sökFält.getText();
 			ArrayList<Plats> platsNamn = sökLista.get(sökOrd);
-			if(platsNamn == null)
-				return; //fel
+			if(platsNamn == null || platsNamn.isEmpty()) {
+				JOptionPane.showMessageDialog(KartaInterface.this, "Fel", "Fel", JOptionPane.ERROR_MESSAGE);
+				return; 
+			}
 			for(Plats p: platsNamn) {
 				p.setMarkerad();
 				p.setVisible(true);
@@ -381,6 +382,24 @@ public class KartaInterface extends JFrame {
 		
 			int xKoordinat = koordinatRuta.getX();
 			int yKoordinat = koordinatRuta.getY();
+			Position pos = new Position(xKoordinat, yKoordinat);
+			
+			for (Plats p: markeradePlatser) {
+				p.Avmarkera();
+			}
+			markeradePlatser.clear();	
+	
+			ArrayList<Plats> positioner = sökLista.get(pos);
+			if(pos == null) {
+				JOptionPane.showMessageDialog(KartaInterface.this, "Fel", "Fel", JOptionPane.ERROR_MESSAGE);
+				return; 
+			}
+			for(Plats p: positioner) {
+				p.setMarkerad();
+				p.setVisible(true);
+				markeradePlatser.add(p);
+			}
+			repaint();
 		}
 	}
 	
