@@ -240,10 +240,12 @@ public class KartaInterface extends JFrame {
 			osparadeÄndringar = true;
 
 		} else if (describedRB.isSelected()) {
-			try {
+			
 				AddDescribedPlace describedRuta = new AddDescribedPlace();
 				int svar = JOptionPane.showConfirmDialog(KartaInterface.this, describedRuta, "Ny ruta",
 						JOptionPane.OK_CANCEL_OPTION);
+				
+				
 
 				if (svar != JOptionPane.OK_OPTION)
 					return;
@@ -251,21 +253,27 @@ public class KartaInterface extends JFrame {
 				String namn = describedRuta.namnFält.getText();
 				String beskrivning = describedRuta.getBeskrivning();
 				String typ = "Described";
+				
+				if (namn == null || beskrivning == null) {
+					JOptionPane.showMessageDialog(KartaInterface.this, "Fel! Mata in rätt data", "Fel! Mata in rätt data",
+							JOptionPane.ERROR_MESSAGE);
+
+					return;
+				} else if (namn.isEmpty() || beskrivning.isEmpty()) {
+					JOptionPane.showMessageDialog(KartaInterface.this, "Fel! Mata in rätt data", "Fel! Mata in rätt data",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 
 				Plats beskrivenPlats = new BeskrivenPlats(typ, valdKategori, namn, x, y, beskrivning);
 				Position pos = new Position(x, y);
 				koordinatlista.put(pos, beskrivenPlats);
-
 				platser.add(beskrivenPlats);
 				kartpanel.add(beskrivenPlats);
 				beskrivenPlats.addMouseListener(new MarkeraLyss());
 				kartpanel.validate();
 				kartpanel.repaint();
 				osparadeÄndringar = true;
-			} catch (NumberFormatException e) {
-				JOptionPane.showMessageDialog(KartaInterface.this, "Fel!", "Fel!", JOptionPane.ERROR_MESSAGE);
-			}
-
 		}
 	}
 	
