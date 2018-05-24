@@ -15,7 +15,7 @@ public class NamngivenPlats extends Plats {
 	}
 
 	public String toString() {
-		return getTyp() + ":" + " {" + getX() + ", " + getY() + "}";
+		return getTyp() + ":" + " {" + getPosX() + ", " + getPosY() + "}";
 	}
 	
 	public String getTyp() {

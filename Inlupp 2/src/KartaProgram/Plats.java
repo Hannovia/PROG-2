@@ -10,6 +10,7 @@ abstract public class Plats extends JComponent {
 	String valdKategori; 
 	String namn;
 	String typ;
+	private int x, y;
 	private boolean markerad = false;
 
 	abstract public void getBeskrivning();
@@ -18,10 +19,18 @@ abstract public class Plats extends JComponent {
 	abstract public String getBeskrivningText();
 
 	public Plats(String typ, String valdKategori, String namn, int x, int y) {
+		this.x=x;
+		this.y=y;
 		this.valdKategori = valdKategori;
 		this.namn = namn;
 		this.typ = typ;
 		setBounds(x-25,y-50,50,50);
+	}
+	public int getPosX() {
+		return x;
+	}
+	public int getPosY() {
+		return y;
 	}
 	public void setMarkerad() {
 		if(markerad)

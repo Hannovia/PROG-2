@@ -34,7 +34,7 @@ public class KartaInterface extends JFrame {
 	JList<String> kategorilista = new JList <String>(kategorier);
 	Map<Position, Plats> platsMap = new HashMap<>(); // Namn bör ndras
 	Map<String, ArrayList<Plats>> sökNamnLista = new HashMap<>();
-	Map<Position, ArrayList<Plats>> sökPosLista = new HashMap<>();
+	Map<Position, Plats> sökPosLista = new HashMap<>();
 	HashSet<Plats> platser = new HashSet<>();
 	HashSet<Plats> markeradePlatser = new HashSet<>();
 	ArrayList<Plats> positioner;
@@ -260,13 +260,14 @@ public class KartaInterface extends JFrame {
 			
 			platsNamn.add(namngivenPlats);
 			
-			positioner = sökPosLista.get(pos);
-			if(!sökPosLista.containsKey(pos)) {
-				positioner = new ArrayList<Plats>();
-				sökPosLista.put(pos, positioner);
-			}
+			//positioner = sökPosLista.get(pos);
+			sökPosLista.putIfAbsent(pos, namngivenPlats);
+//			if(!sökPosLista.containsKey(pos)) {
+//				positioner = new ArrayList<Plats>();
+//				sökPosLista.put(pos, positioner);
+//			}
 			
-			positioner.add(namngivenPlats);
+			//positioner.add(namngivenPlats);
 			
 			
 			
@@ -315,13 +316,14 @@ public class KartaInterface extends JFrame {
 				
 				platsNamn.add(beskrivenPlats);
 				
-				positioner = sökPosLista.get(pos);
-				if(!sökPosLista.containsKey(pos)) {
-					positioner = new ArrayList<Plats>();
-					sökPosLista.put(pos, positioner);
-				}
+				//positioner = sökPosLista.get(pos);
+				sökPosLista.putIfAbsent(pos, beskrivenPlats);
+//				if(!sökPosLista.containsKey(pos)) {
+//					positioner = new ArrayList<Plats>();
+//					sökPosLista.put(pos, positioner);
+//				}
 				
-				positioner.add(beskrivenPlats);
+				//positioner.add(beskrivenPlats);
 				
 				
 				platsMap.put(pos, beskrivenPlats);
@@ -405,6 +407,7 @@ public class KartaInterface extends JFrame {
 			
 			int xKoordinat = koordinatRuta.getXFält();
 			int yKoordinat = koordinatRuta.getYFält();
+			System.out.println(xKoordinat + " " + yKoordinat);
 			Position pos = new Position(xKoordinat, yKoordinat);
 			
 			for (Plats p: markeradePlatser) {
@@ -412,17 +415,19 @@ public class KartaInterface extends JFrame {
 			}
 			markeradePlatser.clear();	
 	
-			positioner = sökPosLista.get(pos);
-			if(positioner == null) {
+			Plats p = sökPosLista.get(pos);
+			if(p == null) {
 				JOptionPane.showMessageDialog(KartaInterface.this, "Fel. Det finns ingen plats här.", "Fel. Det finns ingen plats här.", JOptionPane.ERROR_MESSAGE);
 				return; 
 			}
-		
-			for(Plats p: positioner) {
-				p.setMarkerad();
-				p.setVisible(true);
-				markeradePlatser.add(p);
-			}
+			p.setMarkerad();
+			p.setVisible(true);
+			markeradePlatser.add(p);
+//			for(Plats p: positioner) {
+//				p.setMarkerad();
+//				p.setVisible(true);
+//				markeradePlatser.add(p);
+//			}
 			repaint();
 		}
 	}
