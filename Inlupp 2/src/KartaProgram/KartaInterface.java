@@ -153,9 +153,15 @@ public class KartaInterface extends JFrame {
 	
 	class SökaLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
-//			String sökOrd = sökFält.getText();
-//			if(sökOrd.equals(""))
-//				sökOrd = platser.getSelectedItem();
+			for (Plats p: platser) {
+				p.Avmarkera();
+				markeradePlatser.clear();	
+			}
+			repaint();
+
+			String sökOrd = sökFält.getText();
+			if(sökOrd.equals(""))
+				sökOrd = platser.getSelectedValue();
 		}
 	}
 	
@@ -277,8 +283,6 @@ public class KartaInterface extends JFrame {
 		}
 	}
 	
-
-
 	public class MarkeraLyss extends MouseAdapter{
 		@Override
 		public void mouseClicked (MouseEvent mev) {
@@ -312,7 +316,6 @@ public class KartaInterface extends JFrame {
 		}
 	}
 
-	
 	class AddKoordinatRuta extends JPanel{
 		JTextField xFält = new JTextField(6);
 		JTextField yFält = new JTextField(6);

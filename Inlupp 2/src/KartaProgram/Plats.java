@@ -29,6 +29,7 @@ abstract public class Plats extends JComponent {
 		else
 			markerad = true;
 	}
+
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
