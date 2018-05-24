@@ -173,10 +173,10 @@ public class KartaInterface extends JFrame {
 		}
 	}
 	
-	class addDescribedPlace extends JPanel {
+	class AddDescribedPlace extends JPanel {
 		JTextField namnFält = new JTextField(10);
 		JTextField beskrivningFält = new JTextField(30);
-		addDescribedPlace() {
+		AddDescribedPlace() {
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			JPanel rad1 = new JPanel();
 			rad1.add(new JLabel ("Namn: "));
@@ -192,9 +192,6 @@ public class KartaInterface extends JFrame {
 			return beskrivningFält.getText();
 		}
 	}
-//	private void add(Plats plats) {
-//		koordinatlista.put(plats.Position(x, y));
-//	}
 	
 	class MusLyss extends MouseAdapter {
 		@Override
@@ -207,30 +204,34 @@ public class KartaInterface extends JFrame {
 	}
 	
 	public void AddPlats() {
-		
+
 		nyKnapp.setEnabled(true);
 
 		valdKategori = kategorilista.getSelectedValue();
 		if (valdKategori == null) {
 			valdKategori = "Ingen";
 		}
-		
-	
 		kartpanel.setCursor(Cursor.getDefaultCursor());
 
 		if (namedRB.isSelected()) {
 			String namn = JOptionPane.showInputDialog(KartaInterface.this, "Ange namn på ny plats:");
 			if (namn == null) {
+				JOptionPane.showMessageDialog(KartaInterface.this, "Fel! Mata in rätt data", "Fel! Mata in rätt data",
+						JOptionPane.ERROR_MESSAGE);
+
 				return;
 			} else if (namn.isEmpty()) {
-				return; // Skriv ett errormeddelande här
+				JOptionPane.showMessageDialog(KartaInterface.this, "Fel! Mata in rätt data", "Fel! Mata in rätt data",
+						JOptionPane.ERROR_MESSAGE);
+				return;
 			}
-			
+
 			System.out.println(valdKategori);
 			String typ = "Named";
-			
+
 			Plats namngivenPlats = new NamngivenPlats(typ, valdKategori, namn, x, y);
-			Position position = new Position(x, y);
+			Position pos = new Position(x, y);
+			koordinatlista.put(pos, namngivenPlats);
 			platser.add(namngivenPlats);
 			kartpanel.add(namngivenPlats);
 			namngivenPlats.addMouseListener(new MarkeraLyss());
@@ -239,28 +240,32 @@ public class KartaInterface extends JFrame {
 			osparadeÄndringar = true;
 
 		} else if (describedRB.isSelected()) {
-			addDescribedPlace describedRuta = new addDescribedPlace();
-			int svar = JOptionPane.showConfirmDialog(KartaInterface.this, describedRuta, "Ny ruta",
-					JOptionPane.OK_CANCEL_OPTION);
+			try {
+				AddDescribedPlace describedRuta = new AddDescribedPlace();
+				int svar = JOptionPane.showConfirmDialog(KartaInterface.this, describedRuta, "Ny ruta",
+						JOptionPane.OK_CANCEL_OPTION);
 
-			if (svar != JOptionPane.OK_OPTION)
-				return;
+				if (svar != JOptionPane.OK_OPTION)
+					return;
 
-			String namn = describedRuta.namnFält.getText();
-			String beskrivning = describedRuta.getBeskrivning();
-			String typ = "Described";
-			
-			
-			Plats beskrivenPlats = new BeskrivenPlats(typ, valdKategori, namn, x, y, beskrivning);
-			Position position = new Position(x, y);
-		
-			platser.add(beskrivenPlats);
-			kartpanel.add(beskrivenPlats);
-			beskrivenPlats.addMouseListener(new MarkeraLyss());
-			kartpanel.validate();
-			kartpanel.repaint();
-			osparadeÄndringar = true;
-	
+				String namn = describedRuta.namnFält.getText();
+				String beskrivning = describedRuta.getBeskrivning();
+				String typ = "Described";
+
+				Plats beskrivenPlats = new BeskrivenPlats(typ, valdKategori, namn, x, y, beskrivning);
+				Position pos = new Position(x, y);
+				koordinatlista.put(pos, beskrivenPlats);
+
+				platser.add(beskrivenPlats);
+				kartpanel.add(beskrivenPlats);
+				beskrivenPlats.addMouseListener(new MarkeraLyss());
+				kartpanel.validate();
+				kartpanel.repaint();
+				osparadeÄndringar = true;
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(KartaInterface.this, "Fel!", "Fel!", JOptionPane.ERROR_MESSAGE);
+			}
+
 		}
 	}
 	
@@ -274,12 +279,10 @@ public class KartaInterface extends JFrame {
 			if (mev.getButton() == MouseEvent.BUTTON1) {
 				if(markeradePlatser.contains(p)) {
 					markeradePlatser.remove(p);
-					System.out.println("tas bort");
 					p.setMarkerad();
 					repaint();
 				} else {
 					markeradePlatser.add(p);
-					System.out.println("läggs till");
 					p.setMarkerad();
 					repaint();
 				}
@@ -347,15 +350,11 @@ public class KartaInterface extends JFrame {
 					platser.remove(p);
 				}
 				markeradePlatser.clear();
+				koordinatlista.clear();
 				repaint();
-				
-				// det ska även tas bort ur hashmappen?
 		}
 	}
 	
-	void LaddaPlatser(){
-		
-	}
 	
 	class LaddaPlatserLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
@@ -389,21 +388,36 @@ public class KartaInterface extends JFrame {
 						String namn = tokens[2];
 						int x = Integer.parseInt(tokens[3]);
 						int y = Integer.parseInt(tokens[4]);
+						Position pos = new Position(x,y);
 						
 						Plats p = new NamngivenPlats(typ, valdKategori, namn, x, y);
-						LaddaPlatser();
+						platser.add(p);
+						kartpanel.add(p);
+						koordinatlista.put(pos, p);
+						p.addMouseListener(new MarkeraLyss());
+						kartpanel.validate();
+						kartpanel.repaint();
+						
+
 					} else if (tokens[0].equals("Described")) {
 						String typ = (tokens[0]);
 						valdKategori = (tokens[1]);
 						String namn = tokens[2];
 						int x = Integer.parseInt(tokens[3]);
 						int y = Integer.parseInt(tokens[4]);
+						Position pos = new Position(x,y);
 						String beskrivning = (tokens[5]);
 						
 						Plats p = new BeskrivenPlats(typ, valdKategori, namn, x, y, beskrivning);
-						LaddaPlatser();
+						platser.add(p);
+						kartpanel.add(p);
+						koordinatlista.put(pos, p);
+						p.addMouseListener(new MarkeraLyss());
+						kartpanel.validate();
+						kartpanel.repaint();
 					}
 				}
+				
 				in.close();
 				br.close();
 				
@@ -422,13 +436,6 @@ public class KartaInterface extends JFrame {
 			
 		}
 	}
-	
-//	for place p : alla.values
-//	instanceof namedplace
-//	if 
-//		p.getkategori p.getpos p.getnamne 
-//	else 
-//		filewrite utfil = new filewriter file.getname
 
 	void spara(Map<Position, Plats> vad) {
 		int svar = filVäljare.showSaveDialog(KartaInterface.this);
@@ -458,6 +465,18 @@ public class KartaInterface extends JFrame {
 	class ExitLyss implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent ave) {
+			if(osparadeÄndringar) {
+				int svar = JOptionPane.showConfirmDialog(KartaInterface.this, "Du har osparade ändringar, vill du fortsätta?");
+				if(svar != JOptionPane.OK_OPTION)
+					return;
+				for (Plats p: koordinatlista.values()) {
+					kartpanel.remove(p);
+				}
+				
+				koordinatlista.clear();
+				markeradePlatser.clear();
+				platser.clear();
+			}
 			System.exit(0);
 		}
 	}
