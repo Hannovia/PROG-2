@@ -399,8 +399,8 @@ public class KartaInterface extends JFrame {
 			AddKoordinatRuta koordinatRuta = new AddKoordinatRuta();
 			int svar = JOptionPane.showConfirmDialog(KartaInterface.this, koordinatRuta, "Skriv koordinater", JOptionPane.OK_CANCEL_OPTION);
 		
-			int xKoordinat = koordinatRuta.getX();
-			int yKoordinat = koordinatRuta.getY();
+			int xKoordinat = koordinatRuta.getXFält();
+			int yKoordinat = koordinatRuta.getYFält();
 			Position pos = new Position(xKoordinat, yKoordinat);
 			
 			for (Plats p: markeradePlatser) {
@@ -409,10 +409,10 @@ public class KartaInterface extends JFrame {
 			markeradePlatser.clear();	
 	
 			ArrayList<Plats> positioner = koordinatlista2.get(pos);
-//			if(pos == null) {
-//				JOptionPane.showMessageDialog(KartaInterface.this, "Fel", "Fel", JOptionPane.ERROR_MESSAGE);
-//				return; 
-//			}
+			if(positioner == null) {
+				JOptionPane.showMessageDialog(KartaInterface.this, "Fel", "Fel", JOptionPane.ERROR_MESSAGE);
+				return; 
+			}
 		
 			for(Plats p: positioner) {
 				p.setMarkerad();
