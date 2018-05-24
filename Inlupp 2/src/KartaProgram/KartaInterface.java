@@ -34,6 +34,7 @@ public class KartaInterface extends JFrame {
 	JList<String> kategorilista = new JList <String>(kategorier);
 	Map<Position, Plats> koordinatlista = new HashMap<>(); // Namn bör ndras
 	Map<String, ArrayList<Plats>> sökLista = new HashMap<>();
+	Map<Position, ArrayList<Plats>> koordinatlista2 = new HashMap<>();
 	HashSet<Plats> platser = new HashSet<>();
 	HashSet<Plats> markeradePlatser = new HashSet<>();
 	
@@ -255,8 +256,18 @@ public class KartaInterface extends JFrame {
 				sökLista.put(namn, platsNamn);
 			}
 			
+			
 			platsNamn.add(namngivenPlats);
-				
+			
+			ArrayList<Plats> koordi = koordinatlista2.get(pos);
+			if(!koordinatlista2.containsKey(pos)) {
+				koordi = new ArrayList<Plats>();
+				koordinatlista2.put(pos, koordi);
+			}
+			
+			koordi.add(namngivenPlats);
+			
+			
 			
 			koordinatlista.put(pos, namngivenPlats);
 			platser.add(namngivenPlats);
@@ -303,6 +314,14 @@ public class KartaInterface extends JFrame {
 				}
 				
 				platsNamn.add(beskrivenPlats);
+				
+				ArrayList<Plats> koordi = koordinatlista2.get(pos);
+				if(!koordinatlista2.containsKey(pos)) {
+					koordi = new ArrayList<Plats>();
+					koordinatlista2.put(pos, koordi);
+				}
+				
+				koordi.add(beskrivenPlats);
 				
 				koordinatlista.put(pos, beskrivenPlats);
 				platser.add(beskrivenPlats);
@@ -389,11 +408,12 @@ public class KartaInterface extends JFrame {
 			}
 			markeradePlatser.clear();	
 	
-			ArrayList<Plats> positioner = sökLista.get(pos);
+			ArrayList<Plats> positioner = koordinatlista2.get(pos);
 			if(pos == null) {
 				JOptionPane.showMessageDialog(KartaInterface.this, "Fel", "Fel", JOptionPane.ERROR_MESSAGE);
 				return; 
 			}
+		
 			for(Plats p: positioner) {
 				p.setMarkerad();
 				p.setVisible(true);
