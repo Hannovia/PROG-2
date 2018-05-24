@@ -31,7 +31,7 @@ public class KartaInterface extends JFrame {
 	
 	String[] kategorier = {"Underground", "Bus", "Train"};
 	JList<String> kategorilista = new JList <String>(kategorier);
-	Map<Position, Plats> koordinatlista = new HashMap<>();
+	Map<Position, Plats> koordinatlista = new HashMap<>(); // Namn bör ndras
 	HashSet<Plats> platser = new HashSet<>();
 	HashSet<Plats> markeradePlatser = new HashSet<>();
 
