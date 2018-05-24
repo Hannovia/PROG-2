@@ -12,20 +12,35 @@ abstract public class Plats extends JComponent {
 	String typ;
 	private int x, y;
 	private boolean markerad = false;
+	private Position pos;
 
 	abstract public void getBeskrivning();
 	abstract public String toString();
 	abstract public String getTyp();
 	abstract public String getBeskrivningText();
 
-	public Plats(String typ, String valdKategori, String namn, int x, int y) {
+	public Plats(String typ, String valdKategori, String namn, Position pos) {
 		this.x=x;
 		this.y=y;
 		this.valdKategori = valdKategori;
 		this.namn = namn;
 		this.typ = typ;
-		setBounds(x-25,y-50,50,50);
+		this.pos = pos;
+		setBounds(pos.getX()-25,pos.getY()-50,50,50);
 	}
+	
+	public String getNamn() {
+		return namn;
+	}
+	
+	public Position getPos() {
+		return pos;
+	}
+	
+	public String getKategori() {
+		return valdKategori;
+	}
+	
 	public int getPosX() {
 		return x;
 	}
@@ -64,7 +79,7 @@ abstract public class Plats extends JComponent {
 				g.setColor(Color.GREEN);
 				repaint();
 				break;
-			default:
+			case "None":
 				g.setColor(Color.BLACK);
 				repaint();
 				break;

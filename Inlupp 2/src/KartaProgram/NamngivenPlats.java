@@ -10,8 +10,8 @@ import javax.swing.*;
 
 public class NamngivenPlats extends Plats {
 
-	public NamngivenPlats(String typ, String valdKategori, String vald, int x, int y) {
-		super(typ, valdKategori, vald, x, y);
+	public NamngivenPlats(String typ, String valdKategori, String vald, Position pos) {
+		super(typ, valdKategori, vald, pos);
 	}
 
 	public String toString() {

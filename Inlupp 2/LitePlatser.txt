@@ -1,1 +1,6 @@
-Named,Ingen,hh,359,125
+Named,Train,t2,537,277
+Named,Bus,b2,440,154
+Named,Bus,b1,273,161
+Named,Train,t1,399,328
+Named,Underground,u2,682,380
+Named,Underground,u1,662,175
