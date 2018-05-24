@@ -17,7 +17,7 @@ abstract public class Plats extends JComponent {
 	abstract public String getTyp();
 	abstract public String getBeskrivningText();
 
-	public Plats(int x, int y, String valdKategori, String namn, String typ) {
+	public Plats(String typ, String valdKategori, String namn, int x, int y) {
 		this.valdKategori = valdKategori;
 		this.namn = namn;
 		this.typ = typ;

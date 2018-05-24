@@ -27,16 +27,14 @@ public class KartaInterface extends JFrame {
 	MarkeraLyss markeraLyss = new MarkeraLyss();
 	int x;
 	int y;
-	
+	public boolean osparadeÄndringar = false;
 	
 	String[] kategorier = {"Underground", "Bus", "Train"};
 	JList<String> kategorilista = new JList <String>(kategorier);
 	Map<Position, Plats> koordinatlista = new HashMap<>();
 	HashSet<Plats> platser = new HashSet<>();
 	HashSet<Plats> markeradePlatser = new HashSet<>();
-	
-	DefaultListModel<String> listModel = new DefaultListModel<>();
-	JList<String> söklista = new JList<>(listModel);
+
 	
 	KartaInterface() {
 		super("Inlupp 2: Hanna Severien, Viktor Fagerström Eriksson");	
@@ -51,6 +49,8 @@ public class KartaInterface extends JFrame {
 		
 		JMenuItem loadPlaces = new JMenuItem("Load Places");
 		meny.add(loadPlaces);
+		loadPlaces.addActionListener(new LaddaPlatserLyss());
+		
 		
 		JMenuItem save = new JMenuItem("Save");
 		meny.add(save);
@@ -229,13 +229,14 @@ public class KartaInterface extends JFrame {
 			System.out.println(valdKategori);
 			String typ = "Named";
 			
-			Plats namngivenPlats = new NamngivenPlats(x, y, valdKategori, namn, typ);
+			Plats namngivenPlats = new NamngivenPlats(typ, valdKategori, namn, x, y);
 			Position position = new Position(x, y);
 			platser.add(namngivenPlats);
 			kartpanel.add(namngivenPlats);
 			namngivenPlats.addMouseListener(new MarkeraLyss());
 			kartpanel.validate();
 			kartpanel.repaint();
+			osparadeÄndringar = true;
 
 		} else if (describedRB.isSelected()) {
 			addDescribedPlace describedRuta = new addDescribedPlace();
@@ -250,7 +251,7 @@ public class KartaInterface extends JFrame {
 			String typ = "Described";
 			
 			
-			Plats beskrivenPlats = new BeskrivenPlats(x, y, valdKategori, beskrivning, namn, typ);
+			Plats beskrivenPlats = new BeskrivenPlats(typ, valdKategori, namn, x, y, beskrivning);
 			Position position = new Position(x, y);
 		
 			platser.add(beskrivenPlats);
@@ -258,6 +259,7 @@ public class KartaInterface extends JFrame {
 			beskrivenPlats.addMouseListener(new MarkeraLyss());
 			kartpanel.validate();
 			kartpanel.repaint();
+			osparadeÄndringar = true;
 	
 		}
 	}
@@ -351,24 +353,56 @@ public class KartaInterface extends JFrame {
 		}
 	}
 	
+	void LaddaPlatser(){
+		
+	}
+	
 	class LaddaPlatserLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
 			try {
+				if(osparadeÄndringar) {
+					int svar = JOptionPane.showConfirmDialog(KartaInterface.this, "Du har osparade ändringar, vill du fortsätta?");
+					if(svar != JOptionPane.OK_OPTION)
+						return;
+					for (Plats p: koordinatlista.values()) {
+						kartpanel.remove(p);
+					}
+					
+					koordinatlista.clear();
+					markeradePlatser.clear();
+					platser.clear();
+				}
+				
+				int svar2 = filVäljare.showOpenDialog(KartaInterface.this);
+				if (svar2 != JFileChooser.APPROVE_OPTION)
+					return;
+				
 				FileReader in = new FileReader("LitePlatser.txt"); // Vi måste fråga användaren om filnamnet
 				BufferedReader br = new BufferedReader(in);
 				String line;
 				while ((line = br.readLine()) != null) {
 					String [] tokens = line.split(",");
-					String typ = getTyp(tokens[0]);
-					valdKategori = somethingsomething(tokens[1]);
-					String namn = tokens[1];
-					x = getX(tokens[2]);
-					y = getX(tokens[3]);
-					Position pos = Position.parsePosition(tokens[2]);
-					String beskrivning = getBeskrivningText(tokens[4]);
 					
-					Plats p = new Plats(typ, valdKategori, namn, x, y, beskrivning);
-					AddPerson(p);
+					if(tokens[0].equals("Named")) {
+						String typ = (tokens[0]);
+						valdKategori = (tokens[1]);
+						String namn = tokens[2];
+						int x = Integer.parseInt(tokens[3]);
+						int y = Integer.parseInt(tokens[4]);
+						
+						Plats p = new NamngivenPlats(typ, valdKategori, namn, x, y);
+						LaddaPlatser();
+					} else if (tokens[0].equals("Described")) {
+						String typ = (tokens[0]);
+						valdKategori = (tokens[1]);
+						String namn = tokens[2];
+						int x = Integer.parseInt(tokens[3]);
+						int y = Integer.parseInt(tokens[4]);
+						String beskrivning = (tokens[5]);
+						
+						Plats p = new BeskrivenPlats(typ, valdKategori, namn, x, y, beskrivning);
+						LaddaPlatser();
+					}
 				}
 				in.close();
 				br.close();
@@ -378,12 +412,14 @@ public class KartaInterface extends JFrame {
 				} catch (IOException e) {
 					JOptionPane.showMessageDialog(KartaInterface.this, "Fel");
 				}
+				
 		}
 	}
 	
 	class SparaLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
 			spara(koordinatlista);
+			
 		}
 	}
 	
@@ -411,6 +447,7 @@ public class KartaInterface extends JFrame {
 					+ p.namn + "," + p.getX() + "," + p.getY() + "," + p.getBeskrivningText());
 					}
 					out.close();
+					osparadeÄndringar = false;
 				}
 			 catch (IOException e) {
 				JOptionPane.showMessageDialog(KartaInterface.this, "Fel");
