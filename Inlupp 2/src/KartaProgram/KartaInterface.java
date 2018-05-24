@@ -9,9 +9,6 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.*;
 import java.util.*;
 
-// TO-DO-LIST
-// - när remove-knappen går igenom listan ska den endast gå igenom en lista med markeade objekt, inte alla objekt
-//- Om det finns osparade ändringar när man trycker exit ska programmet fråga om man vill spara
 
 public class KartaInterface extends JFrame {
 	KartPanel kartpanel = null;
@@ -32,7 +29,7 @@ public class KartaInterface extends JFrame {
 	
 	String[] kategorier = {"Underground", "Bus", "Train"};
 	JList<String> kategorilista = new JList <String>(kategorier);
-	Map<Position, Plats> platsMap = new HashMap<>(); // Namn bör ndras
+	Map<Position, Plats> platsMap = new HashMap<>(); 
 	Map<String, ArrayList<Plats>> sökNamnLista = new HashMap<>();
 	Map<Position, Plats> sökPosLista = new HashMap<>();
 	HashSet<Plats> platser = new HashSet<>();
@@ -127,7 +124,6 @@ public class KartaInterface extends JFrame {
 		
 		// Fönster
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-//		setLocationRelativeTo(null);
 		setSize(1140, 923);
 		setVisible(true);
 		
@@ -169,11 +165,13 @@ public class KartaInterface extends JFrame {
 				return; 
 			}
 			for(Plats p: platsNamn) {
-				p.setMarkerad();
+				p.Markera();
 				p.setVisible(true);
 				markeradePlatser.add(p);
 			}
+			
 			repaint();
+			
 		}
 	}
 	
@@ -259,17 +257,9 @@ public class KartaInterface extends JFrame {
 			
 			
 			platsNamn.add(namngivenPlats);
-			
-			//positioner = sökPosLista.get(pos);
+
 			sökPosLista.putIfAbsent(pos, namngivenPlats);
-//			if(!sökPosLista.containsKey(pos)) {
-//				positioner = new ArrayList<Plats>();
-//				sökPosLista.put(pos, positioner);
-//			}
-			
-			//positioner.add(namngivenPlats);
-			
-			
+
 			
 			platsMap.put(pos, namngivenPlats);
 			platser.add(namngivenPlats);
@@ -315,16 +305,8 @@ public class KartaInterface extends JFrame {
 				}
 				
 				platsNamn.add(beskrivenPlats);
-				
-				//positioner = sökPosLista.get(pos);
+		
 				sökPosLista.putIfAbsent(pos, beskrivenPlats);
-//				if(!sökPosLista.containsKey(pos)) {
-//					positioner = new ArrayList<Plats>();
-//					sökPosLista.put(pos, positioner);
-//				}
-				
-				//positioner.add(beskrivenPlats);
-				
 				
 				platsMap.put(pos, beskrivenPlats);
 				platser.add(beskrivenPlats);
@@ -420,14 +402,9 @@ public class KartaInterface extends JFrame {
 				JOptionPane.showMessageDialog(KartaInterface.this, "Fel. Det finns ingen plats här.", "Fel. Det finns ingen plats här.", JOptionPane.ERROR_MESSAGE);
 				return; 
 			}
-			p.setMarkerad();
+			p.Markera();
 			p.setVisible(true);
 			markeradePlatser.add(p);
-//			for(Plats p: positioner) {
-//				p.setMarkerad();
-//				p.setVisible(true);
-//				markeradePlatser.add(p);
-//			}
 			repaint();
 		}
 	}

@@ -42,6 +42,10 @@ abstract public class Plats extends JComponent {
 		markerad = false;
 	}
 	
+	public void Markera() {
+		markerad = true;
+	}
+	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 			int[] xes = {25, 0, 50};
