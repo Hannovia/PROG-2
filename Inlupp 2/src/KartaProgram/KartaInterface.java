@@ -32,11 +32,12 @@ public class KartaInterface extends JFrame {
 	
 	String[] kategorier = {"Underground", "Bus", "Train"};
 	JList<String> kategorilista = new JList <String>(kategorier);
-	Map<Position, Plats> koordinatlista = new HashMap<>(); // Namn bör ndras
-	Map<String, ArrayList<Plats>> sökLista = new HashMap<>();
-	Map<Position, ArrayList<Plats>> koordinatlista2 = new HashMap<>();
+	Map<Position, Plats> platsMap = new HashMap<>(); // Namn bör ndras
+	Map<String, ArrayList<Plats>> sökNamnLista = new HashMap<>();
+	Map<Position, ArrayList<Plats>> sökPosLista = new HashMap<>();
 	HashSet<Plats> platser = new HashSet<>();
 	HashSet<Plats> markeradePlatser = new HashSet<>();
+	ArrayList<Plats> positioner;
 	
 	
 	KartaInterface() {
@@ -162,7 +163,7 @@ public class KartaInterface extends JFrame {
 			markeradePlatser.clear();	
 	
 			String sökOrd = sökFält.getText();
-			ArrayList<Plats> platsNamn = sökLista.get(sökOrd);
+			ArrayList<Plats> platsNamn = sökNamnLista.get(sökOrd);
 			if(platsNamn == null || platsNamn.isEmpty()) {
 				JOptionPane.showMessageDialog(KartaInterface.this, "Fel", "Fel", JOptionPane.ERROR_MESSAGE);
 				return; 
@@ -249,27 +250,27 @@ public class KartaInterface extends JFrame {
 			Plats namngivenPlats = new NamngivenPlats(typ, valdKategori, namn, x, y);
 			Position pos = new Position(x, y);
 			
-			ArrayList<Plats> platsNamn = sökLista.get(namn);
+			ArrayList<Plats> platsNamn = sökNamnLista.get(namn);
 			
-			if(!sökLista.containsKey(namn)) {
+			if(!sökNamnLista.containsKey(namn)) {
 				platsNamn = new ArrayList<Plats>();
-				sökLista.put(namn, platsNamn);
+				sökNamnLista.put(namn, platsNamn);
 			}
 			
 			
 			platsNamn.add(namngivenPlats);
 			
-			ArrayList<Plats> positioner = koordinatlista2.get(pos);
-			if(!koordinatlista2.containsKey(pos)) {
+			positioner = sökPosLista.get(pos);
+			if(!sökPosLista.containsKey(pos)) {
 				positioner = new ArrayList<Plats>();
-				koordinatlista2.put(pos, positioner);
+				sökPosLista.put(pos, positioner);
 			}
 			
 			positioner.add(namngivenPlats);
 			
 			
 			
-			koordinatlista.put(pos, namngivenPlats);
+			platsMap.put(pos, namngivenPlats);
 			platser.add(namngivenPlats);
 			kartpanel.add(namngivenPlats);
 			namngivenPlats.addMouseListener(new MarkeraLyss());
@@ -306,24 +307,24 @@ public class KartaInterface extends JFrame {
 				Plats beskrivenPlats = new BeskrivenPlats(typ, valdKategori, namn, x, y, beskrivning);
 				Position pos = new Position(x, y);
 				
-				ArrayList<Plats> platsNamn = sökLista.get(namn);
-				
-				if(!sökLista.containsKey(namn)) {
+				ArrayList<Plats> platsNamn = sökNamnLista.get(namn);
+				if(!sökNamnLista.containsKey(namn)) {
 					platsNamn = new ArrayList<Plats>();
-					sökLista.put(namn, platsNamn);
+					sökNamnLista.put(namn, platsNamn);
 				}
 				
 				platsNamn.add(beskrivenPlats);
 				
-				ArrayList<Plats> positioner = koordinatlista2.get(pos);
-				if(!koordinatlista2.containsKey(pos)) {
+				positioner = sökPosLista.get(pos);
+				if(!sökPosLista.containsKey(pos)) {
 					positioner = new ArrayList<Plats>();
-					koordinatlista2.put(pos, positioner);
+					sökPosLista.put(pos, positioner);
 				}
 				
 				positioner.add(beskrivenPlats);
 				
-				koordinatlista.put(pos, beskrivenPlats);
+				
+				platsMap.put(pos, beskrivenPlats);
 				platser.add(beskrivenPlats);
 				kartpanel.add(beskrivenPlats);
 				beskrivenPlats.addMouseListener(new MarkeraLyss());
@@ -399,6 +400,9 @@ public class KartaInterface extends JFrame {
 			AddKoordinatRuta koordinatRuta = new AddKoordinatRuta();
 			int svar = JOptionPane.showConfirmDialog(KartaInterface.this, koordinatRuta, "Skriv koordinater", JOptionPane.OK_CANCEL_OPTION);
 		
+			if(svar != JOptionPane.OK_OPTION)
+				return;
+			
 			int xKoordinat = koordinatRuta.getXFält();
 			int yKoordinat = koordinatRuta.getYFält();
 			Position pos = new Position(xKoordinat, yKoordinat);
@@ -408,9 +412,9 @@ public class KartaInterface extends JFrame {
 			}
 			markeradePlatser.clear();	
 	
-			ArrayList<Plats> positioner = koordinatlista2.get(pos);
+			positioner = sökPosLista.get(pos);
 			if(positioner == null) {
-				JOptionPane.showMessageDialog(KartaInterface.this, "Fel", "Fel", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(KartaInterface.this, "Fel. Det finns ingen plats här.", "Fel. Det finns ingen plats här.", JOptionPane.ERROR_MESSAGE);
 				return; 
 			}
 		
@@ -430,7 +434,7 @@ public class KartaInterface extends JFrame {
 					platser.remove(p);
 				}
 				markeradePlatser.clear();
-				koordinatlista.clear();
+				platsMap.clear();
 				repaint();
 		}
 	}
@@ -443,11 +447,11 @@ public class KartaInterface extends JFrame {
 					int svar = JOptionPane.showConfirmDialog(KartaInterface.this, "Du har osparade ändringar, vill du fortsätta?");
 					if(svar != JOptionPane.OK_OPTION)
 						return;
-					for (Plats p: koordinatlista.values()) {
+					for (Plats p: platsMap.values()) {
 						kartpanel.remove(p);
 					}
 					
-					koordinatlista.clear();
+					platsMap.clear();
 					markeradePlatser.clear();
 					platser.clear();
 				}
@@ -473,7 +477,7 @@ public class KartaInterface extends JFrame {
 						Plats p = new NamngivenPlats(typ, valdKategori, namn, x, y);
 						platser.add(p);
 						kartpanel.add(p);
-						koordinatlista.put(pos, p);
+						platsMap.put(pos, p);
 						p.addMouseListener(new MarkeraLyss());
 						kartpanel.validate();
 						kartpanel.repaint();
@@ -491,7 +495,7 @@ public class KartaInterface extends JFrame {
 						Plats p = new BeskrivenPlats(typ, valdKategori, namn, x, y, beskrivning);
 						platser.add(p);
 						kartpanel.add(p);
-						koordinatlista.put(pos, p);
+						platsMap.put(pos, p);
 						p.addMouseListener(new MarkeraLyss());
 						kartpanel.validate();
 						kartpanel.repaint();
@@ -512,7 +516,7 @@ public class KartaInterface extends JFrame {
 	
 	class SparaLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
-			spara(koordinatlista);
+			spara(platsMap);
 			
 		}
 	}
@@ -549,11 +553,11 @@ public class KartaInterface extends JFrame {
 				int svar = JOptionPane.showConfirmDialog(KartaInterface.this, "Du har osparade ändringar, vill du fortsätta?");
 				if(svar != JOptionPane.OK_OPTION)
 					return;
-				for (Plats p: koordinatlista.values()) {
+				for (Plats p: platsMap.values()) {
 					kartpanel.remove(p);
 				}
 				
-				koordinatlista.clear();
+				platsMap.clear();
 				markeradePlatser.clear();
 				platser.clear();
 			}
