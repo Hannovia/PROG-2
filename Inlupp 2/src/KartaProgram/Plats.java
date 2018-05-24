@@ -29,7 +29,9 @@ abstract public class Plats extends JComponent {
 		else
 			markerad = true;
 	}
-
+	public void Avmarkera() {
+		markerad = false;
+	}
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -68,5 +70,6 @@ abstract public class Plats extends JComponent {
 		markerad = to;
 		repaint();
 	}
+
 }
 

@@ -2,6 +2,7 @@ package KartaProgram;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.List;
 import java.awt.event.*;
 import java.io.*;
 import javax.swing.filechooser.FileFilter;
@@ -32,9 +33,11 @@ public class KartaInterface extends JFrame {
 	String[] kategorier = {"Underground", "Bus", "Train"};
 	JList<String> kategorilista = new JList <String>(kategorier);
 	Map<Position, Plats> koordinatlista = new HashMap<>(); // Namn bör ndras
+	Map<String, ArrayList<Plats>> sökLista = new HashMap<>();
 	HashSet<Plats> platser = new HashSet<>();
 	HashSet<Plats> markeradePlatser = new HashSet<>();
-
+	
+	//Viktor lek
 	
 	KartaInterface() {
 		super("Inlupp 2: Hanna Severien, Viktor Fagerström Eriksson");	
@@ -153,15 +156,21 @@ public class KartaInterface extends JFrame {
 	
 	class SökaLyss implements ActionListener{
 		public void actionPerformed(ActionEvent ave) {
-			for (Plats p: platser) {
+			for (Plats p: markeradePlatser) {
 				p.Avmarkera();
-				markeradePlatser.clear();	
+			}
+			markeradePlatser.clear();	
+	
+			String sökOrd = sökFält.getText();
+			ArrayList<Plats> platsNamn = sökLista.get(sökOrd);
+			if(platsNamn == null)
+				return; //fel
+			for(Plats p: platsNamn) {
+				p.setMarkerad();
+				p.setVisible(true);
+				markeradePlatser.add(p);
 			}
 			repaint();
-
-			String sökOrd = sökFält.getText();
-			if(sökOrd.equals(""))
-				sökOrd = platser.getSelectedValue();
 		}
 	}
 	
@@ -237,6 +246,17 @@ public class KartaInterface extends JFrame {
 
 			Plats namngivenPlats = new NamngivenPlats(typ, valdKategori, namn, x, y);
 			Position pos = new Position(x, y);
+			
+			ArrayList<Plats> platsNamn = sökLista.get(namn);
+			
+			if(!sökLista.containsKey(namn)) {
+				platsNamn = new ArrayList<Plats>();
+				sökLista.put(namn, platsNamn);
+			}
+			
+			platsNamn.add(namngivenPlats);
+				
+			
 			koordinatlista.put(pos, namngivenPlats);
 			platser.add(namngivenPlats);
 			kartpanel.add(namngivenPlats);
@@ -273,6 +293,16 @@ public class KartaInterface extends JFrame {
 
 				Plats beskrivenPlats = new BeskrivenPlats(typ, valdKategori, namn, x, y, beskrivning);
 				Position pos = new Position(x, y);
+				
+				ArrayList<Plats> platsNamn = sökLista.get(namn);
+				
+				if(!sökLista.containsKey(namn)) {
+					platsNamn = new ArrayList<Plats>();
+					sökLista.put(namn, platsNamn);
+				}
+				
+				platsNamn.add(beskrivenPlats);
+				
 				koordinatlista.put(pos, beskrivenPlats);
 				platser.add(beskrivenPlats);
 				kartpanel.add(beskrivenPlats);
