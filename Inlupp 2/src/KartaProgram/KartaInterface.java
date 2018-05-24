@@ -259,13 +259,13 @@ public class KartaInterface extends JFrame {
 			
 			platsNamn.add(namngivenPlats);
 			
-			ArrayList<Plats> koordi = koordinatlista2.get(pos);
+			ArrayList<Plats> positioner = koordinatlista2.get(pos);
 			if(!koordinatlista2.containsKey(pos)) {
-				koordi = new ArrayList<Plats>();
-				koordinatlista2.put(pos, koordi);
+				positioner = new ArrayList<Plats>();
+				koordinatlista2.put(pos, positioner);
 			}
 			
-			koordi.add(namngivenPlats);
+			positioner.add(namngivenPlats);
 			
 			
 			
@@ -315,13 +315,13 @@ public class KartaInterface extends JFrame {
 				
 				platsNamn.add(beskrivenPlats);
 				
-				ArrayList<Plats> koordi = koordinatlista2.get(pos);
+				ArrayList<Plats> positioner = koordinatlista2.get(pos);
 				if(!koordinatlista2.containsKey(pos)) {
-					koordi = new ArrayList<Plats>();
-					koordinatlista2.put(pos, koordi);
+					positioner = new ArrayList<Plats>();
+					koordinatlista2.put(pos, positioner);
 				}
 				
-				koordi.add(beskrivenPlats);
+				positioner.add(beskrivenPlats);
 				
 				koordinatlista.put(pos, beskrivenPlats);
 				platser.add(beskrivenPlats);
@@ -409,10 +409,10 @@ public class KartaInterface extends JFrame {
 			markeradePlatser.clear();	
 	
 			ArrayList<Plats> positioner = koordinatlista2.get(pos);
-			if(pos == null) {
-				JOptionPane.showMessageDialog(KartaInterface.this, "Fel", "Fel", JOptionPane.ERROR_MESSAGE);
-				return; 
-			}
+//			if(pos == null) {
+//				JOptionPane.showMessageDialog(KartaInterface.this, "Fel", "Fel", JOptionPane.ERROR_MESSAGE);
+//				return; 
+//			}
 		
 			for(Plats p: positioner) {
 				p.setMarkerad();
