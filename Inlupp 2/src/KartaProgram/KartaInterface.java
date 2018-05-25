@@ -22,6 +22,7 @@ public class KartaInterface extends JFrame {
 	JButton nyKnapp;
 	MusLyss musLyss = new MusLyss();
 	MarkeraLyss markeraLyss = new MarkeraLyss();
+	File fil;
 	int x;
 	int y;
 	public boolean osparadeÄndringar = false;
@@ -137,12 +138,12 @@ public class KartaInterface extends JFrame {
 			if (svar != JFileChooser.APPROVE_OPTION)
 				return;
 
-			File fil = filVäljare.getSelectedFile();
-			String filNamn = fil.getAbsolutePath();
+			fil = filVäljare.getSelectedFile();
+			String filnamn = fil.getAbsolutePath();
 			if (scrollPane != null)
 				remove(scrollPane);
 
-			kartpanel = new KartPanel(filNamn);
+			kartpanel = new KartPanel(filnamn);
 			scrollPane = new JScrollPane(kartpanel);
 
 			add(scrollPane, BorderLayout.CENTER);
@@ -201,6 +202,8 @@ public class KartaInterface extends JFrame {
 
 	class NyLyss implements ActionListener {
 		public void actionPerformed(ActionEvent ave) {
+			if (kartpanel == null)
+				return;
 			kartpanel.addMouseListener(musLyss);
 			nyKnapp.setEnabled(false);
 			kartpanel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
@@ -250,17 +253,17 @@ public class KartaInterface extends JFrame {
 
 		if (namedRB.isSelected()) {
 			String namn = JOptionPane.showInputDialog(KartaInterface.this, "Ange namn på ny plats:");
-			if (namn == null) {
-				JOptionPane.showMessageDialog(KartaInterface.this, "Fel! Mata in rätt data", "Fel! Mata in rätt data",
-						JOptionPane.ERROR_MESSAGE);
+			System.out.println(namn);
 
+			if (namn == null) {
 				return;
+
 			} else if (namn.isEmpty()) {
 				JOptionPane.showMessageDialog(KartaInterface.this, "Fel! Mata in rätt data", "Fel! Mata in rätt data",
 						JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-
+			
 			String typ = "Named";
 			Position pos = new Position(x, y);
 			String kategori = kategorilista.getSelectedValue();
@@ -285,19 +288,6 @@ public class KartaInterface extends JFrame {
 				kategoriSet.put(valdKategori, Platser);
 			}
 			Platser.add(namngivenPlats);
-
-			// switch(valdKategori) {
-			// case "Underground":
-			// //undergroundPlatsLista.add(namngivenPlats);
-			//
-			// break;
-			// case "Bus":
-			// busPlatsLista.add(namngivenPlats);
-			// break;
-			// case "Train":
-			// trainPlatsLista.add(namngivenPlats);
-			// break;
-			// }
 
 			platsMap.put(pos, namngivenPlats);
 			platser.add(namngivenPlats);
@@ -348,17 +338,7 @@ public class KartaInterface extends JFrame {
 
 			sökPosLista.putIfAbsent(pos, beskrivenPlats);
 
-			// switch(valdKategori) {
-			// case "Underground":
-			// undergroundPlatsLista.add(beskrivenPlats);
-			// break;
-			// case "Bus":
-			// busPlatsLista.add(beskrivenPlats);
-			// break;
-			// case "Train":
-			// trainPlatsLista.add(beskrivenPlats);
-			// break;
-			// }
+
 
 			Set<Plats> Platser = kategoriSet.get(valdKategori);
 			if (Platser == null) {
@@ -502,8 +482,10 @@ public class KartaInterface extends JFrame {
 				int svar2 = filVäljare.showOpenDialog(KartaInterface.this);
 				if (svar2 != JFileChooser.APPROVE_OPTION)
 					return;
-
-				FileReader in = new FileReader("LitePlatser.txt"); // Vi måste fråga användaren om filnamnet
+				
+				File file = filVäljare.getSelectedFile();
+				String filnamn = file.getAbsolutePath();
+				FileReader in = new FileReader(filnamn); 
 				BufferedReader br = new BufferedReader(in);
 				String line;
 				while ((line = br.readLine()) != null) {
@@ -512,9 +494,9 @@ public class KartaInterface extends JFrame {
 					if (tokens[0].equals("Named")) {
 						String typ = (tokens[0]);
 						valdKategori = (tokens[1]);
-						String namn = tokens[2];
-						int x = Integer.parseInt(tokens[3]);
-						int y = Integer.parseInt(tokens[4]);
+						int x = Integer.parseInt(tokens[2]);
+						int y = Integer.parseInt(tokens[3]);
+						String namn = tokens[4];
 						Position pos = new Position(x, y);
 
 						Plats p = new NamngivenPlats(typ, valdKategori, namn, pos);
@@ -530,10 +512,10 @@ public class KartaInterface extends JFrame {
 					} else if (tokens[0].equals("Described")) {
 						String typ = (tokens[0]);
 						valdKategori = (tokens[1]);
-						String namn = tokens[2];
-						int x = Integer.parseInt(tokens[3]);
-						int y = Integer.parseInt(tokens[4]);
+						int x = Integer.parseInt(tokens[2]);
+						int y = Integer.parseInt(tokens[3]);
 						Position pos = new Position(x, y);
+						String namn = tokens[4];
 						String beskrivning = (tokens[5]);
 
 						Plats p = new BeskrivenPlats(typ, valdKategori, namn, pos, beskrivning);
@@ -593,14 +575,14 @@ public class KartaInterface extends JFrame {
 			String filnamn = f.getAbsolutePath();
 
 			try {
-				FileWriter utfil = new FileWriter("LitePlatser.txt");
+				FileWriter utfil = new FileWriter(filnamn);
 				PrintWriter out = new PrintWriter(utfil);
 				for (Plats p : platser)
 					if (p instanceof NamngivenPlats) {
-						out.println(p.typ + "," + p.valdKategori + "," + p.namn + "," + p.getX() + "," + p.getY());
+						out.println(p.typ + "," + p.valdKategori + "," + p.getPosX() + "," + p.getPosY() + "," + p.namn);
 					} else {
-						out.println(p.typ + "," + p.valdKategori + "," + p.namn + "," + p.getX() + "," + p.getY() + ","
-								+ p.getBeskrivningText());
+						out.println(p.typ + "," + p.valdKategori +  "," + p.getPosX() + "," + p.getPosY() + "," + p.namn + "," +
+								 p.getBeskrivningText());
 					}
 				out.close();
 				osparadeÄndringar = false;
