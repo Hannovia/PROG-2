@@ -20,8 +20,7 @@ abstract public class Plats extends JComponent {
 	abstract public String getBeskrivningText();
 
 	public Plats(String typ, String valdKategori, String namn, Position pos) {
-		this.x=x;
-		this.y=y;
+	
 		this.valdKategori = valdKategori;
 		this.namn = namn;
 		this.typ = typ;

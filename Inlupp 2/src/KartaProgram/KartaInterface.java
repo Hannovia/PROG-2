@@ -119,6 +119,7 @@ public class KartaInterface extends JFrame {
 		högra.add(scrollPane);
 		högra.setLayout(new BoxLayout(högra, BoxLayout.Y_AXIS));
 		add(högra, BorderLayout.EAST);
+		kategorilista.setVisibleRowCount(3);
 
 		JButton gömKategorier = new JButton("Hide Categories");
 		högra.add(gömKategorier);
