@@ -10,7 +10,6 @@ abstract public class Plats extends JComponent {
 	String valdKategori; 
 	String namn;
 	String typ;
-	private int x, y;
 	private boolean markerad = false;
 	private Position pos;
 
@@ -41,10 +40,10 @@ abstract public class Plats extends JComponent {
 	}
 	
 	public int getPosX() {
-		return x;
+		return pos.getX();
 	}
 	public int getPosY() {
-		return y;
+		return pos.getY();
 	}
 	public void setMarkerad() {
 		if(markerad)

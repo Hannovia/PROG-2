@@ -196,6 +196,7 @@ public class KartaInterface extends JFrame {
 			for (Plats p : plats) {
 				p.setVisible(false);
 			}
+			
 			kategorilista.clearSelection();
 
 		}
@@ -254,23 +255,19 @@ public class KartaInterface extends JFrame {
 
 		if (namedRB.isSelected()) {
 			String namn = JOptionPane.showInputDialog(KartaInterface.this, "Ange namn på ny plats:");
-			System.out.println(namn);
-
-			if (namn == null) {
-				return;
-
-			} else if (namn.isEmpty()) {
+			Position pos = new Position(x, y);
+			if (namn == null || namn.isEmpty()) {
 				JOptionPane.showMessageDialog(KartaInterface.this, "Fel! Mata in rätt data", "Fel! Mata in rätt data",
 						JOptionPane.ERROR_MESSAGE);
 				return;
-			} else if(platsMap.contains(pos, p )) {
+			} else if(platsMap.containsKey(pos)) {
 				JOptionPane.showMessageDialog(KartaInterface.this, "Fel. Det finns redan en plats här!",
 						"Fel. Det finns redan en plats här!", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			
 			String typ = "Named";
-			Position pos = new Position(x, y);
+			
 			String kategori = kategorilista.getSelectedValue();
 			if (kategori == null) {
 				kategori = "None";
@@ -426,32 +423,36 @@ public class KartaInterface extends JFrame {
 	class KoordinaterLyss implements ActionListener {
 		public void actionPerformed(ActionEvent ave) {
 			AddKoordinatRuta koordinatRuta = new AddKoordinatRuta();
-			int svar = JOptionPane.showConfirmDialog(KartaInterface.this, koordinatRuta, "Skriv koordinater",
-					JOptionPane.OK_CANCEL_OPTION);
+			try {
+				int svar = JOptionPane.showConfirmDialog(KartaInterface.this, koordinatRuta, "Skriv koordinater",
+						JOptionPane.OK_CANCEL_OPTION);
 
-			if (svar != JOptionPane.OK_OPTION)
-				return;
+				if (svar != JOptionPane.OK_OPTION)
+					return;
 
-			int xKoordinat = koordinatRuta.getXFält();
-			int yKoordinat = koordinatRuta.getYFält();
-			System.out.println(xKoordinat + " " + yKoordinat);
-			Position pos = new Position(xKoordinat, yKoordinat);
+				int xKoordinat = koordinatRuta.getXFält();
+				int yKoordinat = koordinatRuta.getYFält();
+				Position pos = new Position(xKoordinat, yKoordinat);
 
-			for (Plats p : markeradePlatser) {
-				p.Avmarkera();
+				for (Plats p : markeradePlatser) {
+					p.Avmarkera();
+				}
+				markeradePlatser.clear();
+
+				Plats p = sökPosLista.get(pos);
+				if (p == null) {
+					JOptionPane.showMessageDialog(KartaInterface.this, "Fel. Det finns ingen plats här.",
+							"Fel. Det finns ingen plats här.", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				p.Markera();
+				p.setVisible(true);
+				markeradePlatser.add(p);
+				repaint();
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(KartaInterface.this, "Fel! Mata in rätt data", "Fel! Mata in rätt data",
+						JOptionPane.ERROR_MESSAGE);
 			}
-			markeradePlatser.clear();
-
-			Plats p = sökPosLista.get(pos);
-			if (p == null) {
-				JOptionPane.showMessageDialog(KartaInterface.this, "Fel. Det finns ingen plats här.",
-						"Fel. Det finns ingen plats här.", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			p.Markera();
-			p.setVisible(true);
-			markeradePlatser.add(p);
-			repaint();
 		}
 	}
 
@@ -499,9 +500,9 @@ public class KartaInterface extends JFrame {
 					if (tokens[0].equals("Named")) {
 						String typ = (tokens[0]);
 						valdKategori = (tokens[1]);
-						int x = Integer.parseInt(tokens[2]);
-						int y = Integer.parseInt(tokens[3]);
-						String namn = tokens[4];
+						int x = Integer.parseInt(tokens[3]);
+						int y = Integer.parseInt(tokens[4]);
+						String namn = tokens[2];
 						Position pos = new Position(x, y);
 
 						Plats p = new NamngivenPlats(typ, valdKategori, namn, pos);
@@ -517,10 +518,10 @@ public class KartaInterface extends JFrame {
 					} else if (tokens[0].equals("Described")) {
 						String typ = (tokens[0]);
 						valdKategori = (tokens[1]);
-						int x = Integer.parseInt(tokens[2]);
-						int y = Integer.parseInt(tokens[3]);
+						int x = Integer.parseInt(tokens[4]);
+						int y = Integer.parseInt(tokens[4]);
 						Position pos = new Position(x, y);
-						String namn = tokens[4];
+						String namn = tokens[2];
 						String beskrivning = (tokens[5]);
 
 						Plats p = new BeskrivenPlats(typ, valdKategori, namn, pos, beskrivning);
@@ -548,7 +549,6 @@ public class KartaInterface extends JFrame {
 	}
 
 	private void addFrånLadd(Plats plats) {
-		System.out.println("test");
 		platsMap.put(plats.getPos(), plats);
 		ArrayList<Plats> sökNamn = sökNamnLista.get(plats.getNamn());
 		if (sökNamn == null) {
