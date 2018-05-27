@@ -262,6 +262,10 @@ public class KartaInterface extends JFrame {
 				JOptionPane.showMessageDialog(KartaInterface.this, "Fel! Mata in rätt data", "Fel! Mata in rätt data",
 						JOptionPane.ERROR_MESSAGE);
 				return;
+			} else if(platsMap.contains(pos, p )) {
+				JOptionPane.showMessageDialog(KartaInterface.this, "Fel. Det finns redan en plats här!",
+						"Fel. Det finns redan en plats här!", JOptionPane.ERROR_MESSAGE);
+				return;
 			}
 			
 			String typ = "Named";
