@@ -13,10 +13,10 @@ abstract public class Plats extends JComponent {
 	private boolean markerad = false;
 	private Position pos;
 
-	abstract public void getBeskrivning();
+	abstract public void getDescription();
 	abstract public String toString();
-	abstract public String getTyp();
-	abstract public String getBeskrivningText();
+	abstract public String getType();
+	abstract public String getDescriptionText();
 
 	public Plats(String typ, String valdKategori, String namn, Position pos) {
 	
@@ -35,7 +35,7 @@ abstract public class Plats extends JComponent {
 		return pos;
 	}
 	
-	public String getKategori() {
+	public String getCategory() {
 		return valdKategori;
 	}
 	
@@ -45,17 +45,17 @@ abstract public class Plats extends JComponent {
 	public int getPosY() {
 		return pos.getY();
 	}
-	public void setMarkerad() {
+	public void setHighlighted() {
 		if(markerad)
 			markerad = false;
 		else
 			markerad = true;
 	}
-	public void Avmarkera() {
+	public void UnMark() {
 		markerad = false;
 	}
 	
-	public void Markera() {
+	public void Highlight() {
 		markerad = true;
 	}
 	

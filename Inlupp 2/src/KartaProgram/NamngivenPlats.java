@@ -15,19 +15,19 @@ public class NamngivenPlats extends Plats {
 	}
 
 	public String toString() {
-		return getTyp() + ":" + " {" + getPosX() + ", " + getPosY() + "}";
+		return getType() + ":" + " {" + getPosX() + ", " + getPosY() + "}";
 	}
 	
-	public String getTyp() {
+	public String getType() {
 		return "Named";
 	}
 
-	public String getBeskrivningText() {
+	public String getDescriptionText() {
 		return null;
 	}
 	
 	@Override
-	public void getBeskrivning() {
+	public void getDescription() {
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
 		JPanel namnPanel = new JPanel();

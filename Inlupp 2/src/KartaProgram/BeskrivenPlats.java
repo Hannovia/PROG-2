@@ -18,19 +18,19 @@ public class BeskrivenPlats extends Plats {
 
 	
 	public String toString() {
-		return  getTyp() + ":" + " {" + getPosX() + ", " + getPosY() + "}";
+		return  getType() + ":" + " {" + getPosX() + ", " + getPosY() + "}";
 	}
 	
-	public String getTyp() {
+	public String getType() {
 		return "Described";
 	}
 	
-	public String getBeskrivningText() {
+	public String getDescriptionText() {
 		return beskrivning;
 	}
 	
 	@Override
-	public void getBeskrivning() {
+	public void getDescription() {
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
 		JPanel namnPanel = new JPanel();

@@ -3,10 +3,10 @@ package KartaProgram;
 import javax.swing.*;
 import java.awt.*;
 
-public class KartPanel extends JPanel {
+public class MapPanel extends JPanel {
 	private ImageIcon karta;
 	
-	public KartPanel(String filNamn){
+	public MapPanel(String filNamn){
 		setLayout(null);
 		karta = new ImageIcon(filNamn);
 		int w = karta.getIconWidth();
