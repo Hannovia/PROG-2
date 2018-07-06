@@ -4,13 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MapPanel extends JPanel {
-	private ImageIcon karta;
+	private ImageIcon map;
 	
 	public MapPanel(String filNamn){
 		setLayout(null);
-		karta = new ImageIcon(filNamn);
-		int w = karta.getIconWidth();
-		int h = karta.getIconHeight();
+		map = new ImageIcon(filNamn);
+		int w = map.getIconWidth();
+		int h = map.getIconHeight();
 		
 		setPreferredSize(new Dimension(w,h));
 		setMaximumSize(new Dimension(w, h));
@@ -19,7 +19,7 @@ public class MapPanel extends JPanel {
 	
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(karta.getImage(), 0, 0, this);
+		g.drawImage(map.getImage(), 0, 0, this);
 	}
 
 }
