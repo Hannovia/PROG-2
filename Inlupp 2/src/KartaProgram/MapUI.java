@@ -32,6 +32,9 @@ public class MapUI extends JFrame {
 	
 	// ändra plats till place, namedplace, descriedplace klasserna
 	// vissa errormeddelanden fungerar ej
+	// UnsavedChanges fungerar ej som de ska
+	// Om man redan har en existerade karta med platser på, och man laddar in en ny karta ska de gamla platserna tas bort. FIXAT
+	// excistingPlace() fungerar ej, kommer ej upp något meddeldande
 
 	String[] categories = { "Underground", "Bus", "Train" };
 	JList<String> categoryList = new JList<String>(categories);
@@ -70,7 +73,7 @@ public class MapUI extends JFrame {
 
 		JMenuItem exit = new JMenuItem("Exit");
 		menu.add(exit);
-		exit.addActionListener(new ExitListener());
+//		exit.addWindowListener(new ExitListener());
 		setJMenuBar(menuBar);
 
 		// Filväljare
@@ -131,7 +134,7 @@ public class MapUI extends JFrame {
 
 		// Fönster
 		addWindowListener(new ExitListener());
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		setSize(1140, 923);
 		setVisible(true);
 
@@ -196,24 +199,29 @@ public class MapUI extends JFrame {
 
 	class HideCategoriesListener implements ActionListener {
 		public void actionPerformed(ActionEvent ave) {
+			try {
 
-			String category = categoryList.getSelectedValue();
-			
-			if(mapPanel == null) {
-				return;
-			}
+				String category = categoryList.getSelectedValue();
 
-			Set<Plats> place = categorySet.get(category);
-			
-			if (categorySet.isEmpty()) {
-				return;
-			}
+				if (mapPanel == null) {
+					return;
+				}
 
-			for (Plats p : place) {
-				p.setVisible(false);
+				Set<Plats> place = categorySet.get(category);
+
+				if (categorySet.isEmpty() || category == null) {
+					return;
+				}
+
+				for (Plats p : place) {
+					p.setVisible(false);
+				}
+
+				categoryList.clearSelection();
+
+			} catch (NumberFormatException e) {
+				inputErrorMessage();
 			}
-			
-			categoryList.clearSelection();
 
 		}
 	}
@@ -248,9 +256,28 @@ public class MapUI extends JFrame {
 			return descriptionField.getText();
 		}
 	}
+	
+	public void addPlace() {
+		newButton.setEnabled(true);
+
+		choosenCategory = categoryList.getSelectedValue();
+		if (choosenCategory == null) {
+			choosenCategory = "Ingen";
+		}
+		mapPanel.setCursor(Cursor.getDefaultCursor());
+
+		if (namedRB.isSelected()) {
+			addNamedPlace();
+
+		} else if (describedRB.isSelected()) {
+			addDescribedPlace();
+		}
+		mapPanel.validate();
+		mapPanel.repaint();
+		unsavedChanges = true;
+	}
 
 	class MouseListener extends MouseAdapter {
-		@Override
 		public void mouseClicked(MouseEvent mev) {
 			x = mev.getX();
 			y = mev.getY();
@@ -263,12 +290,13 @@ public class MapUI extends JFrame {
 	public void unsavedChanges() {
 		int answer = JOptionPane.showConfirmDialog(MapUI.this, "Du har osparade ändringar, vill du fortsätta?");
 
-		if (answer != JOptionPane.OK_OPTION)
+		if (answer != JOptionPane.OK_OPTION) {
 			return;
-		for (Plats p : placeMap.values()) {
-			mapPanel.remove(p);
+		} else {
+			for (Plats p : placeMap.values()) {
+				mapPanel.remove(p);
+			}
 		}
-
 		placeMap.clear();
 		highlightedPlaces.clear();
 		places.clear();
@@ -314,14 +342,14 @@ public class MapUI extends JFrame {
 			category = "None";
 		}
 
-		Plats namedPlace = new NamngivenPlats(type, category, name, pos);
-		searchByName(name, namedPlace);
-		searchPosList.putIfAbsent(pos, namedPlace);
-		hideByCategory(namedPlace);
-		placeMap.put(pos, namedPlace);
-		places.add(namedPlace);
-		mapPanel.add(namedPlace);
-		namedPlace.addMouseListener(new HighlightListener());
+		Plats place = new NamngivenPlats(type, category, name, pos);
+		searchByName(name, place);
+		searchPosList.putIfAbsent(pos, place);
+		hideByCategory(place);
+		placeMap.put(pos, place);
+		places.add(place);
+		mapPanel.add(place);
+		place.addMouseListener(new HighlightListener());
 	}
 
 	public void addDescribedPlace() {
@@ -349,16 +377,14 @@ public class MapUI extends JFrame {
 			category = "None";
 		}
 		
-		Plats describedPlace = new BeskrivenPlats(type, category, name, pos, description);
-		
-		searchByName(name, describedPlace);
-		searchPosList.putIfAbsent(pos, describedPlace);
-		hideByCategory(describedPlace);
-		placeMap.put(pos, describedPlace);
-		places.add(describedPlace);
-		mapPanel.add(describedPlace);
-		describedPlace.addMouseListener(new HighlightListener());
-		
+		Plats place = new BeskrivenPlats(type, category, name, pos, description);
+		searchByName(name, place);
+		searchPosList.putIfAbsent(pos, place);
+		hideByCategory(place);
+		placeMap.put(pos, place);
+		places.add(place);
+		mapPanel.add(place);
+		place.addMouseListener(new HighlightListener());
 	}
 	
 	public void searchByName(String name, Plats place) {
@@ -380,27 +406,6 @@ public class MapUI extends JFrame {
 		placesSet.add(place);
 	}
 	
-	public void addPlace() {
-		newButton.setEnabled(true);
-
-		choosenCategory = categoryList.getSelectedValue();
-		if (choosenCategory == null) {
-			choosenCategory = "Ingen";
-		}
-		mapPanel.setCursor(Cursor.getDefaultCursor());
-
-		if (namedRB.isSelected()) {
-			addNamedPlace();
-
-		} else if (describedRB.isSelected()) {
-			
-			addDescribedPlace();
-		}
-		mapPanel.validate();
-		mapPanel.repaint();
-		unsavedChanges = true;
-	}
-
 	public class HighlightListener extends MouseAdapter {
 		@Override
 		public void mouseClicked(MouseEvent mev) {
@@ -488,10 +493,11 @@ public class MapUI extends JFrame {
 				p.Highlight();
 				p.setVisible(true);
 				highlightedPlaces.add(p);
-				repaint();
 			} catch (NumberFormatException e) {
 				inputErrorMessage();
 			}
+			
+			repaint();
 		}
 	}
 
@@ -528,12 +534,11 @@ public class MapUI extends JFrame {
 
 				while ((line = br.readLine()) != null) {
 					String[] tokens = line.split(",");
-					
 					String type = (tokens[0]);
 					choosenCategory = (tokens[1]);
-					String name = tokens[4];
 					int x = Integer.parseInt(tokens[2]);
 					int y = Integer.parseInt(tokens[3]);
+					String name = tokens[4];
 					Position pos = new Position(x, y);
 					Plats p = null;
 
@@ -557,6 +562,7 @@ public class MapUI extends JFrame {
 				
 				mapPanel.validate();
 				mapPanel.repaint();
+				repaint();
 				in.close();
 				br.close();
 
@@ -606,8 +612,7 @@ public class MapUI extends JFrame {
 					if (p instanceof NamngivenPlats) {
 						out.println(p.typ + "," + p.valdKategori + "," + p.getPosX() + "," + p.getPosY() + "," + p.namn);
 					} else {
-						out.println(p.typ + "," + p.valdKategori +  "," + p.getPosX() + "," + p.getPosY() + "," + p.namn + "," +
-								 p.getDescriptionText());
+						out.println(p.typ + "," + p.valdKategori +  "," + p.getPosX() + "," + p.getPosY() + "," + p.namn + "," + p.getDescriptionText());
 					}
 				out.close();
 				unsavedChanges = false;
@@ -618,9 +623,9 @@ public class MapUI extends JFrame {
 
 	}
 
-	class ExitListener implements WindowAdapter {
+	class ExitListener extends WindowAdapter {
 		@Override
-		public void windowClosing(Window ave) {
+		public void windowClosing(WindowEvent wev) {
 			if(unsavedChanges) {
 				unsavedChanges();
 				return; 

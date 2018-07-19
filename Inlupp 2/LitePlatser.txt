@@ -1,6 +1,7 @@
-Named,Train,t2,537,277
-Named,Bus,b2,440,154
-Named,Bus,b1,273,161
-Named,Train,t1,399,328
-Named,Underground,u2,682,380
-Named,Underground,u1,662,175
+Named,None,348,343,n1
+Named,Underground,650,265,u1
+Named,Underground,547,396,u2
+Named,Train,206,458,t1
+Named,Train,756,318,t2
+Named,Bus,219,173,b1
+Named,Bus,453,188,b2
