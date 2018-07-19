@@ -32,9 +32,11 @@ public class MapUI extends JFrame {
 	
 	// ändra plats till place, namedplace, descriedplace klasserna
 	// vissa errormeddelanden fungerar ej
-	// UnsavedChanges fungerar ej som de ska
+	// UnsavedChanges fungerar ej som de ska. Nu fungerar de, men själva metoden fungerar ejS
 	// Om man redan har en existerade karta med platser på, och man laddar in en ny karta ska de gamla platserna tas bort. FIXAT
 	// excistingPlace() fungerar ej, kommer ej upp något meddeldande
+	
+	// jag höll på med excisting place
 
 	String[] categories = { "Underground", "Bus", "Train" };
 	JList<String> categoryList = new JList<String>(categories);
@@ -142,6 +144,21 @@ public class MapUI extends JFrame {
 	
 	class NewMapListener implements ActionListener {
 		public void actionPerformed(ActionEvent ave) {
+			if(unsavedChanges) {
+				int answer = JOptionPane.showConfirmDialog(MapUI.this, "Du har osparade ändringar, vill du fortsätta?");
+
+				if (answer == JOptionPane.YES_OPTION) {
+					for (Plats p : placeMap.values()) {
+						mapPanel.remove(p);
+						mapPanel.repaint();
+					}
+				placeMap.clear();
+				highlightedPlaces.clear();
+				places.clear();
+				} else {
+					return;
+				}
+			}
 			int answer = fileChooser.showOpenDialog(MapUI.this);
 
 			if (answer != JFileChooser.APPROVE_OPTION)
@@ -286,23 +303,6 @@ public class MapUI extends JFrame {
 			mapPanel.removeMouseListener(this);
 		}
 	}
-
-	public void unsavedChanges() {
-		int answer = JOptionPane.showConfirmDialog(MapUI.this, "Du har osparade ändringar, vill du fortsätta?");
-
-		if (answer != JOptionPane.OK_OPTION) {
-			return;
-		} else {
-			for (Plats p : placeMap.values()) {
-				mapPanel.remove(p);
-			}
-		}
-		placeMap.clear();
-		highlightedPlaces.clear();
-		places.clear();
-
-	}
-	
 	public void inputErrorMessage() {
 		errorMessage = "Fel! Mata in rätt typ av data";
 		JOptionPane.showMessageDialog(MapUI.this, errorMessage, errorMessage, JOptionPane.ERROR_MESSAGE);
@@ -336,6 +336,7 @@ public class MapUI extends JFrame {
 		
 		if (placeMap.containsKey(pos)) {
 			excistingPlace();
+			System.out.println("1");
 		}
 
 		if (category == null) {
@@ -512,16 +513,37 @@ public class MapUI extends JFrame {
 			repaint();
 		}
 	}
+	
+//	public void unsavedChanges() {
+//		int answer = JOptionPane.showConfirmDialog(MapUI.this, "Du har osparade ändringar, vill du fortsätta?");
+//
+//		if (answer == JOptionPane.YES_OPTION) {
+//			System.exit(0);
+//		} else {
+//			return;
+//		}
+//	}
 
 	class LoadPlacesListener implements ActionListener {
 		public void actionPerformed(ActionEvent ave) {
 			noMapOpen();
 			try {
 				if(unsavedChanges) {
-					unsavedChanges();
-					return; 
-				}
+					int answer = JOptionPane.showConfirmDialog(MapUI.this, "Du har osparade ändringar, vill du fortsätta?");
 
+					if (answer == JOptionPane.YES_OPTION) {
+						for (Plats p : placeMap.values()) {
+							mapPanel.remove(p);
+							mapPanel.repaint();
+						}
+					placeMap.clear();
+					highlightedPlaces.clear();
+					places.clear();
+					} else {
+						return;
+					}
+				}
+				
 				int answer2 = fileChooser.showOpenDialog(MapUI.this);
 				if (answer2 != JFileChooser.APPROVE_OPTION)
 					return;
@@ -573,6 +595,7 @@ public class MapUI extends JFrame {
 			}
 		}
 	}
+	
 	
 	private void addFromLoad(Plats plats) {
 		placeMap.put(plats.getPos(), plats);
@@ -627,10 +650,14 @@ public class MapUI extends JFrame {
 		@Override
 		public void windowClosing(WindowEvent wev) {
 			if(unsavedChanges) {
-				unsavedChanges();
-				return; 
+				int answer = JOptionPane.showConfirmDialog(MapUI.this, "Du har osparade ändringar, vill du fortsätta?");
+
+				if (answer == JOptionPane.YES_OPTION) {
+					System.exit(0);
+				} else {
+					return;
+				}
 			}
-			System.exit(0);
 		}
 	}
 

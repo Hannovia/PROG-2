@@ -15,7 +15,7 @@ public class NamngivenPlats extends Plats {
 	}
 
 	public String toString() {
-		return getType() + ":" + " {" + getPosX() + ", " + getPosY() + "}";
+		return getType() + ", " + " {" + getPosX() + ", " + getPosY() + "}";
 	}
 	
 	public String getType() {
@@ -31,7 +31,7 @@ public class NamngivenPlats extends Plats {
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
 		JPanel namnPanel = new JPanel();
-		JLabel namnLabel = new JLabel("Name: " + namn + toString());
+		JLabel namnLabel = new JLabel("Name: " + namn + " " + toString());
 		namnPanel.add(namnLabel);
 		infoPanel.add(namnPanel);
 		JOptionPane.showMessageDialog(null, infoPanel, "Platsinfo: ", JOptionPane.INFORMATION_MESSAGE);
