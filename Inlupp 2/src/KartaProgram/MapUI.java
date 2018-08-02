@@ -1,6 +1,8 @@
 package KartaProgram;
 
 import javax.swing.*;
+import javax.swing.event.AncestorListener;
+
 import java.awt.*;
 import java.awt.List;
 import java.awt.event.*;
@@ -30,29 +32,27 @@ public class MapUI extends JFrame {
 	int x;
 	int y;
 	
-	// ändra plats till place, namedplace, descriedplace klasserna
 	// vissa errormeddelanden fungerar ej
 	// UnsavedChanges fungerar ej som de ska. Nu fungerar de, men själva metoden fungerar ejS
 	// Om man redan har en existerade karta med platser på, och man laddar in en ny karta ska de gamla platserna tas bort. FIXAT
-	// excistingPlace() fungerar ej, kommer ej upp något meddeldande
-	
-	// jag höll på med excisting place
+	// excistingPlace() fungerar ej, kommer ej upp något meddeldande - FIXAT
+	// Trycker man på en kategori ska alla platser under den kategorin visas men ej markeras
 
 	String[] categories = { "Underground", "Bus", "Train" };
 	JList<String> categoryList = new JList<String>(categories);
 
-	Map<String, Set<Plats>> categorySet = new HashMap<>();
+	Map<String, Set<Place>> categorySet = new HashMap<>();
 
-	ArrayList<Plats> busPlaceList = new ArrayList<>();
-	ArrayList<Plats> undergroundPlaceList = new ArrayList<>();
-	ArrayList<Plats> trainPlaceList = new ArrayList<>();
+	ArrayList<Place> busPlaceList = new ArrayList<>();
+	ArrayList<Place> undergroundPlaceList = new ArrayList<>();
+	ArrayList<Place> trainPlaceList = new ArrayList<>();
 
-	Map<Position, Plats> placeMap = new HashMap<>();
-	Map<String, ArrayList<Plats>> searchByNameList = new HashMap<>();
-	Map<Position, Plats> searchPosList = new HashMap<>();
-	HashSet<Plats> places = new HashSet<>();
-	HashSet<Plats> highlightedPlaces = new HashSet<>();
-	ArrayList<Plats> positions;
+	Map<Position, Place> placeMap = new HashMap<>();
+	Map<String, ArrayList<Place>> searchByNameList = new HashMap<>();
+	Map<Position, Place> searchPosList = new HashMap<>();
+	HashSet<Place> places = new HashSet<>();
+	HashSet<Place> highlightedPlaces = new HashSet<>();
+	ArrayList<Place> positions;
 
 	MapUI() {
 		super("Inlupp 2: Hanna Severien, Viktor Fagerström Eriksson");
@@ -75,7 +75,7 @@ public class MapUI extends JFrame {
 
 		JMenuItem exit = new JMenuItem("Exit");
 		menu.add(exit);
-//		exit.addWindowListener(new ExitListener());
+		exit.addActionListener(new ExitListener());
 		setJMenuBar(menuBar);
 
 		// Filväljare
@@ -129,17 +129,32 @@ public class MapUI extends JFrame {
 		east.setLayout(new BoxLayout(east, BoxLayout.Y_AXIS));
 		add(east, BorderLayout.EAST);
 		categoryList.setVisibleRowCount(3);
+//		categoryList.addActionListener( new ShowCategoryListener());
 
 		JButton hideCategoriesButton = new JButton("Hide Categories");
 		east.add(hideCategoriesButton);
 		hideCategoriesButton.addActionListener(new HideCategoriesListener());
 
 		// Fönster
-		addWindowListener(new ExitListener());
+		addWindowListener(new WindowExit());
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		setSize(1140, 923);
 		setVisible(true);
 
+	}
+	
+	class ShowCategoryListener implements ActionListener {
+		public void actionPerformed (ActionEvent ave) {
+			System.out.println("H");
+		}
+	}
+	
+	public void test() {
+		String category = categoryList.getSelectedValue();
+		
+		if(category == "Bus") {
+			System.out.print("dd");
+		}
 	}
 	
 	class NewMapListener implements ActionListener {
@@ -148,7 +163,7 @@ public class MapUI extends JFrame {
 				int answer = JOptionPane.showConfirmDialog(MapUI.this, "Du har osparade ändringar, vill du fortsätta?");
 
 				if (answer == JOptionPane.YES_OPTION) {
-					for (Plats p : placeMap.values()) {
+					for (Place p : placeMap.values()) {
 						mapPanel.remove(p);
 						mapPanel.repaint();
 					}
@@ -164,7 +179,7 @@ public class MapUI extends JFrame {
 			if (answer != JFileChooser.APPROVE_OPTION)
 				return;
 			
-			for (Plats p: places) {
+			for (Place p: places) {
 				if(places.contains(p)) {
 					mapPanel.remove(p);
 					places.remove(p);
@@ -192,18 +207,18 @@ public class MapUI extends JFrame {
 
 	class SearchListener implements ActionListener {
 		public void actionPerformed(ActionEvent ave) {
-			for (Plats p : highlightedPlaces) {
+			for (Place p : highlightedPlaces) {
 				p.UnMark();
 			}
 			highlightedPlaces.clear();
 
 			String searchWord = searchBar.getText();
-			ArrayList<Plats> placeName = searchByNameList.get(searchWord);
+			ArrayList<Place> placeName = searchByNameList.get(searchWord);
 			if (placeName == null || placeName.isEmpty()) {
 				JOptionPane.showMessageDialog(MapUI.this, "Fel", "Fel", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			for (Plats p : placeName) {
+			for (Place p : placeName) {
 				p.Highlight();
 				p.setVisible(true);
 				highlightedPlaces.add(p);
@@ -224,13 +239,13 @@ public class MapUI extends JFrame {
 					return;
 				}
 
-				Set<Plats> place = categorySet.get(category);
+				Set<Place> place = categorySet.get(category);
 
 				if (categorySet.isEmpty() || category == null) {
 					return;
 				}
 
-				for (Plats p : place) {
+				for (Place p : place) {
 					p.setVisible(false);
 				}
 
@@ -242,6 +257,8 @@ public class MapUI extends JFrame {
 
 		}
 	}
+	
+	
 
 	class NewListener implements ActionListener {
 		public void actionPerformed(ActionEvent ave) {
@@ -309,7 +326,6 @@ public class MapUI extends JFrame {
 	}
 	
 	public void excistingPlace() {
-		System.out.println("hejk");
 		errorMessage = "Fel! Det finns redan en plats här!";
 		JOptionPane.showMessageDialog(MapUI.this, errorMessage, errorMessage, JOptionPane.ERROR_MESSAGE);
 		return;
@@ -336,14 +352,13 @@ public class MapUI extends JFrame {
 		
 		if (placeMap.containsKey(pos)) {
 			excistingPlace();
-			System.out.println("1");
 		}
 
 		if (category == null) {
 			category = "None";
 		}
 
-		Plats place = new NamngivenPlats(type, category, name, pos);
+		Place place = new NamedPlace(type, category, name, pos);
 		searchByName(name, place);
 		searchPosList.putIfAbsent(pos, place);
 		hideByCategory(place);
@@ -378,7 +393,7 @@ public class MapUI extends JFrame {
 			category = "None";
 		}
 		
-		Plats place = new BeskrivenPlats(type, category, name, pos, description);
+		Place place = new DescribedPlace(type, category, name, pos, description);
 		searchByName(name, place);
 		searchPosList.putIfAbsent(pos, place);
 		hideByCategory(place);
@@ -388,20 +403,20 @@ public class MapUI extends JFrame {
 		place.addMouseListener(new HighlightListener());
 	}
 	
-	public void searchByName(String name, Plats place) {
-		ArrayList<Plats> placeName = searchByNameList.get(name);
+	public void searchByName(String name, Place place) {
+		ArrayList<Place> placeName = searchByNameList.get(name);
 		if (!searchByNameList.containsKey(name)) {
-			placeName = new ArrayList<Plats>();
+			placeName = new ArrayList<Place>();
 			searchByNameList.put(name, placeName);
 		}
 		placeName.add(place);
 		
 	}
 	
-	public void hideByCategory(Plats place) {
-		Set<Plats> placesSet = categorySet.get(choosenCategory);
+	public void hideByCategory(Place place) {
+		Set<Place> placesSet = categorySet.get(choosenCategory);
 		if (placesSet == null) {
-			placesSet = new HashSet<Plats>();
+			placesSet = new HashSet<Place>();
 			categorySet.put(choosenCategory, placesSet);
 		}
 		placesSet.add(place);
@@ -411,7 +426,7 @@ public class MapUI extends JFrame {
 		@Override
 		public void mouseClicked(MouseEvent mev) {
 
-			Plats p = (Plats) mev.getSource();
+			Place p = (Place) mev.getSource();
 			if (mev.getButton() == MouseEvent.BUTTON1) {
 				if (highlightedPlaces.contains(p)) {
 					highlightedPlaces.remove(p);
@@ -432,7 +447,7 @@ public class MapUI extends JFrame {
 	public class HideListener implements ActionListener {
 		public void actionPerformed(ActionEvent ave) {
 
-			for (Plats p : highlightedPlaces) {
+			for (Place p : highlightedPlaces) {
 				p.setVisible(false);
 			}
 			highlightedPlaces.clear();
@@ -481,12 +496,12 @@ public class MapUI extends JFrame {
 				int yCoordinate = coordinatesPanel.getYField();
 				Position pos = new Position(xCoordinate, yCoordinate);
 
-				for (Plats p : highlightedPlaces) {
+				for (Place p : highlightedPlaces) {
 					p.UnMark();
 				}
 				highlightedPlaces.clear();
 
-				Plats p = searchPosList.get(pos);
+				Place p = searchPosList.get(pos);
 				if (p == null) {
 					inputErrorMessage();
 					return;
@@ -504,7 +519,7 @@ public class MapUI extends JFrame {
 
 	class RemoveListener implements ActionListener {
 		public void actionPerformed(ActionEvent ave) {
-			for (Plats p : highlightedPlaces) {
+			for (Place p : highlightedPlaces) {
 				mapPanel.remove(p);
 				places.remove(p);
 			}
@@ -532,7 +547,7 @@ public class MapUI extends JFrame {
 					int answer = JOptionPane.showConfirmDialog(MapUI.this, "Du har osparade ändringar, vill du fortsätta?");
 
 					if (answer == JOptionPane.YES_OPTION) {
-						for (Plats p : placeMap.values()) {
+						for (Place p : placeMap.values()) {
 							mapPanel.remove(p);
 							mapPanel.repaint();
 						}
@@ -562,14 +577,14 @@ public class MapUI extends JFrame {
 					int y = Integer.parseInt(tokens[3]);
 					String name = tokens[4];
 					Position pos = new Position(x, y);
-					Plats p = null;
+					Place p = null;
 
 					if (tokens[0].equals("Named")) {
-						p = new NamngivenPlats(type, choosenCategory, name, pos);
+						p = new NamedPlace(type, choosenCategory, name, pos);
 					
 					} else if (tokens[0].equals("Described")){
 						String description = (tokens[5]);
-						p = new BeskrivenPlats(type, choosenCategory, name, pos, description);
+						p = new DescribedPlace(type, choosenCategory, name, pos, description);
 					}
 					
 					if(p != null) {
@@ -597,21 +612,21 @@ public class MapUI extends JFrame {
 	}
 	
 	
-	private void addFromLoad(Plats plats) {
-		placeMap.put(plats.getPos(), plats);
-		ArrayList<Plats> searchName = searchByNameList.get(plats.getNamn());
+	private void addFromLoad(Place place) {
+		placeMap.put(place.getPos(), place);
+		ArrayList<Place> searchName = searchByNameList.get(place.getNamn());
 		if (searchName == null) {
-			searchName = new ArrayList<Plats>();
-			searchByNameList.put(plats.getNamn(), searchName);
+			searchName = new ArrayList<Place>();
+			searchByNameList.put(place.getNamn(), searchName);
 		}
-		searchName.add(plats);
+		searchName.add(place);
 
-		Set<Plats> places = categorySet.get(plats.getCategory());
+		Set<Place> places = categorySet.get(place.getCategory());
 		if (places == null) {
-			places = new HashSet<Plats>();
-			categorySet.put(plats.getCategory(), places);
+			places = new HashSet<Place>();
+			categorySet.put(place.getCategory(), places);
 		}
-		places.add(plats);
+		places.add(place);
 
 	}
 
@@ -631,11 +646,11 @@ public class MapUI extends JFrame {
 			try {
 				FileWriter output = new FileWriter(filename);
 				PrintWriter out = new PrintWriter(output);
-				for (Plats p : places)
-					if (p instanceof NamngivenPlats) {
-						out.println(p.typ + "," + p.valdKategori + "," + p.getPosX() + "," + p.getPosY() + "," + p.namn);
+				for (Place p : places)
+					if (p instanceof NamedPlace) {
+						out.println(p.type + "," + p.chosenCategory + "," + p.getPosX() + "," + p.getPosY() + "," + p.name);
 					} else {
-						out.println(p.typ + "," + p.valdKategori +  "," + p.getPosX() + "," + p.getPosY() + "," + p.namn + "," + p.getDescriptionText());
+						out.println(p.type + "," + p.chosenCategory +  "," + p.getPosX() + "," + p.getPosY() + "," + p.name + "," + p.getDescriptionText());
 					}
 				out.close();
 				unsavedChanges = false;
@@ -646,9 +661,23 @@ public class MapUI extends JFrame {
 
 	}
 
-	class ExitListener extends WindowAdapter {
+	class WindowExit extends WindowAdapter {
 		@Override
 		public void windowClosing(WindowEvent wev) {
+			if(unsavedChanges) {
+				int answer = JOptionPane.showConfirmDialog(MapUI.this, "Du har osparade ändringar, vill du fortsätta?");
+
+				if (answer == JOptionPane.YES_OPTION) {
+					System.exit(0);
+				} else {
+					return;
+				}
+			}
+		}
+	}
+	
+	class ExitListener implements ActionListener {
+		public void actionPerformed(ActionEvent ave) {
 			if(unsavedChanges) {
 				int answer = JOptionPane.showConfirmDialog(MapUI.this, "Du har osparade ändringar, vill du fortsätta?");
 
