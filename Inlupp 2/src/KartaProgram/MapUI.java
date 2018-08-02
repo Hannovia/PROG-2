@@ -149,11 +149,21 @@ public class MapUI extends JFrame {
 		}
 	}
 	
-	public void test() {
+	
+	public void ShowCategory() {
+		
+		// inte placerad änfffff
 		String category = categoryList.getSelectedValue();
 		
 		if(category == "Bus") {
-			System.out.print("dd");
+			for(Place b:busPlaceList)
+				b.setVisible(true);
+		} else if (category == "Train") {
+			for(Place t: trainPlaceList)
+				t.setVisible(true);
+		} else if(category == "Underground") {
+			for(Place u : undergroundPlaceList)
+				u.setVisible(true);
 		}
 	}
 	
@@ -254,7 +264,6 @@ public class MapUI extends JFrame {
 			} catch (NumberFormatException e) {
 				inputErrorMessage();
 			}
-
 		}
 	}
 	
