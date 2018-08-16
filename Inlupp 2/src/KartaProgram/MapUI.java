@@ -25,6 +25,7 @@ public class MapUI extends JFrame {
 	String category;
 	JButton newButton;
 	MouseListener mouseListener = new MouseListener();
+	CategoryListListener categoryListener = new CategoryListListener();
 	HighlightListener highlightListener = new HighlightListener();
 	public boolean unsavedChanges = false;
 	public boolean openMap = false;
@@ -32,13 +33,9 @@ public class MapUI extends JFrame {
 	int x;
 	int y;
 	
-	// vissa errormeddelanden fungerar ej
-	// UnsavedChanges fungerar ej som de ska. Nu fungerar de, men själva metoden fungerar ejS
-	// Om man redan har en existerade karta med platser på, och man laddar in en ny karta ska de gamla platserna tas bort. FIXAT
-	// excistingPlace() fungerar ej, kommer ej upp något meddeldande - FIXAT
 	// Trycker man på en kategori ska alla platser under den kategorin visas men ej markeras
 
-	String[] categories = { "Underground", "Bus", "Train" };
+	String[] categories = {"Underground", "Bus", "Train"};
 	JList<String> categoryList = new JList<String>(categories);
 
 	Map<String, Set<Place>> categorySet = new HashMap<>();
@@ -129,7 +126,7 @@ public class MapUI extends JFrame {
 		east.setLayout(new BoxLayout(east, BoxLayout.Y_AXIS));
 		add(east, BorderLayout.EAST);
 		categoryList.setVisibleRowCount(3);
-//		categoryList.addActionListener( new ShowCategoryListener());
+		categoryList.addMouseListener(categoryListener);
 
 		JButton hideCategoriesButton = new JButton("Hide Categories");
 		east.add(hideCategoriesButton);
@@ -143,30 +140,27 @@ public class MapUI extends JFrame {
 
 	}
 	
-	class ShowCategoryListener implements ActionListener {
-		public void actionPerformed (ActionEvent ave) {
-			System.out.println("H");
+	// Fungerar inte, fattar inte varför jävla fitt-Mjava
+	class CategoryListListener extends MouseAdapter {
+		public void mouseClicked(MouseEvent mev) {
+			String category = categoryList.getSelectedValue();
+			
+			if(category == "Bus") {
+				for(Place b:busPlaceList)
+					b.setVisible(true);
+				mapPanel.repaint();
+			} else if (category == "Train") {
+				for(Place t: trainPlaceList)
+					t.setVisible(true);
+				mapPanel.repaint();
+			} else if(category == "Underground") {
+				for(Place u : undergroundPlaceList)
+					u.setVisible(true);
+				mapPanel.repaint();
+			}
 		}
-	}
-	
-	
-	public void ShowCategory() {
-		
-		// inte placerad änfffff
-		String category = categoryList.getSelectedValue();
-		
-		if(category == "Bus") {
-			for(Place b:busPlaceList)
-				b.setVisible(true);
-		} else if (category == "Train") {
-			for(Place t: trainPlaceList)
-				t.setVisible(true);
-		} else if(category == "Underground") {
-			for(Place u : undergroundPlaceList)
-				u.setVisible(true);
-		}
-	}
-	
+	}	
+
 	class NewMapListener implements ActionListener {
 		public void actionPerformed(ActionEvent ave) {
 			if(unsavedChanges) {
@@ -352,21 +346,16 @@ public class MapUI extends JFrame {
 		Position pos = new Position(x, y);
 		String type = "Named";
 		String category = categoryList.getSelectedValue();
-		
-
+		if (placeMap.containsKey(pos)) {
+			excistingPlace();
+		}
 		if (name == null || name.isEmpty()) {
 			inputErrorMessage();
 			return;
 		}
-		
-		if (placeMap.containsKey(pos)) {
-			excistingPlace();
-		}
-
 		if (category == null) {
 			category = "None";
 		}
-
 		Place place = new NamedPlace(type, category, name, pos);
 		searchByName(name, place);
 		searchPosList.putIfAbsent(pos, place);
