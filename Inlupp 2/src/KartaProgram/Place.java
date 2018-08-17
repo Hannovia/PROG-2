@@ -80,24 +80,20 @@ abstract public class Place extends JComponent {
 		switch (chosenCategory) {
 		case "Underground":
 			g.setColor(Color.BLUE);
-			repaint();
 			break;
 		case "Bus":
 			g.setColor(Color.RED);
-			repaint();
 			break;
 		case "Train":
 			g.setColor(Color.GREEN);
-			repaint();
 			break;
 		case "None":
 			g.setColor(Color.BLACK);
-			repaint();
 			break;
 		}
 	}
 	
-	public void setVisad (boolean to) {
+	public void setDetectable (boolean to) {
 		selected = to;
 		repaint();
 	}

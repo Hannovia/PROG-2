@@ -32,8 +32,6 @@ public class MapUI extends JFrame {
 	File file;
 	int x;
 	int y;
-	
-	// Trycker man på en kategori ska alla platser under den kategorin visas men ej markeras
 
 	String[] categories = {"Underground", "Bus", "Train"};
 	JList<String> categoryList = new JList<String>(categories);
@@ -140,23 +138,30 @@ public class MapUI extends JFrame {
 
 	}
 	
-	// Fungerar inte, fattar inte varför jävla fitt-Mjava
+	// Fungerar inte
 	class CategoryListListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent mev) {
-			String category = categoryList.getSelectedValue();
-			
-			if(category == "Bus") {
-				for(Place b:busPlaceList)
-					b.setVisible(true);
-				mapPanel.repaint();
-			} else if (category == "Train") {
-				for(Place t: trainPlaceList)
-					t.setVisible(true);
-				mapPanel.repaint();
-			} else if(category == "Underground") {
-				for(Place u : undergroundPlaceList)
-					u.setVisible(true);
-				mapPanel.repaint();
+			try {
+
+				String category = categoryList.getSelectedValue();
+
+				if (mapPanel == null) {
+					return;
+				}
+
+				Set<Place> place = categorySet.get(category);
+
+				if (categorySet.isEmpty() || category == null) {
+					return;
+				}
+
+				for (Place p : place) {
+					p.setVisible(true);
+				}
+
+
+			} catch (NumberFormatException e) {
+				inputErrorMessage();
 			}
 		}
 	}	
@@ -206,6 +211,7 @@ public class MapUI extends JFrame {
 			validate();
 			repaint();
 			openMap = true; 
+			unsavedChanges = false;
 		}
 	}
 
@@ -526,16 +532,6 @@ public class MapUI extends JFrame {
 			repaint();
 		}
 	}
-	
-//	public void unsavedChanges() {
-//		int answer = JOptionPane.showConfirmDialog(MapUI.this, "Du har osparade ändringar, vill du fortsätta?");
-//
-//		if (answer == JOptionPane.YES_OPTION) {
-//			System.exit(0);
-//		} else {
-//			return;
-//		}
-//	}
 
 	class LoadPlacesListener implements ActionListener {
 		public void actionPerformed(ActionEvent ave) {
@@ -658,33 +654,31 @@ public class MapUI extends JFrame {
 		}
 
 	}
+	
+	public void exit() {
+		if(unsavedChanges) {
+			int answer = JOptionPane.showConfirmDialog(MapUI.this, "Du har osparade ändringar, vill du fortsätta?");
+
+			if (answer == JOptionPane.YES_OPTION) {
+				System.exit(0);
+			} else {
+				return;
+			}
+		} else {
+			System.exit(0);
+		}
+	}
 
 	class WindowExit extends WindowAdapter {
 		@Override
 		public void windowClosing(WindowEvent wev) {
-			if(unsavedChanges) {
-				int answer = JOptionPane.showConfirmDialog(MapUI.this, "Du har osparade ändringar, vill du fortsätta?");
-
-				if (answer == JOptionPane.YES_OPTION) {
-					System.exit(0);
-				} else {
-					return;
-				}
-			}
+			exit();
 		}
 	}
 	
 	class ExitListener implements ActionListener {
 		public void actionPerformed(ActionEvent ave) {
-			if(unsavedChanges) {
-				int answer = JOptionPane.showConfirmDialog(MapUI.this, "Du har osparade ändringar, vill du fortsätta?");
-
-				if (answer == JOptionPane.YES_OPTION) {
-					System.exit(0);
-				} else {
-					return;
-				}
-			}
+			exit();
 		}
 	}
 
