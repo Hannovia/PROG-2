@@ -61,36 +61,41 @@ abstract public class Place extends JComponent {
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-			int[] xes = {25, 0, 50};
-			int[] yes = {50, 0, 0};
-	
-		switch(chosenCategory) {
-			case "Underground":
-				g.setColor(Color.BLUE);
-				repaint();
-				break;
-			case "Bus":
-				g.setColor(Color.RED);
-				repaint();
-				break;
-			case "Train":
-				g.setColor(Color.GREEN);
-				repaint();
-				break;
-			case "None":
-				g.setColor(Color.BLACK);
-				repaint();
-				break;
-		}
+		int[] xes = { 25, 0, 50 };
+		int[] yes = { 50, 0, 0 };
+
+		chooseColor(g);
+
 		g.fillPolygon(xes, yes, 3);
-		
-		if(!selected) {
+
+		if (!selected) {
 			return;
 		} else {
 			g.setColor(Color.MAGENTA);
 			g.drawRect(0, 0, 49, 49);
 		}
-	}	
+	}
+
+	public void chooseColor(Graphics g) {
+		switch (chosenCategory) {
+		case "Underground":
+			g.setColor(Color.BLUE);
+			repaint();
+			break;
+		case "Bus":
+			g.setColor(Color.RED);
+			repaint();
+			break;
+		case "Train":
+			g.setColor(Color.GREEN);
+			repaint();
+			break;
+		case "None":
+			g.setColor(Color.BLACK);
+			repaint();
+			break;
+		}
+	}
 	
 	public void setVisad (boolean to) {
 		selected = to;
