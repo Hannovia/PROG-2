@@ -138,28 +138,21 @@ public class MapUI extends JFrame {
 
 	}
 	
-	// Fungerar inte
 	class CategoryListListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent mev) {
 			try {
-
 				String category = categoryList.getSelectedValue();
-
 				if (mapPanel == null) {
 					return;
 				}
-
 				Set<Place> place = categorySet.get(category);
 
 				if (categorySet.isEmpty() || category == null) {
 					return;
 				}
-
 				for (Place p : place) {
 					p.setVisible(true);
 				}
-
-
 			} catch (NumberFormatException e) {
 				inputErrorMessage();
 			}
@@ -233,32 +226,26 @@ public class MapUI extends JFrame {
 				p.setVisible(true);
 				highlightedPlaces.add(p);
 			}
-
 			repaint();
-
 		}
 	}
 
 	class HideCategoriesListener implements ActionListener {
 		public void actionPerformed(ActionEvent ave) {
 			try {
-
 				String category = categoryList.getSelectedValue();
 
 				if (mapPanel == null) {
 					return;
 				}
-
 				Set<Place> place = categorySet.get(category);
 
 				if (categorySet.isEmpty() || category == null) {
 					return;
 				}
-
 				for (Place p : place) {
 					p.setVisible(false);
 				}
-
 				categoryList.clearSelection();
 
 			} catch (NumberFormatException e) {
@@ -266,9 +253,6 @@ public class MapUI extends JFrame {
 			}
 		}
 	}
-	
-	
-
 	class NewListener implements ActionListener {
 		public void actionPerformed(ActionEvent ave) {
 			if (mapPanel == null)
@@ -278,7 +262,6 @@ public class MapUI extends JFrame {
 			mapPanel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 		}
 	}
-
 	class AddDescribedPlacePanel extends JPanel {
 		JTextField nameField = new JTextField(10);
 		JTextField descriptionField = new JTextField(30);
@@ -294,7 +277,6 @@ public class MapUI extends JFrame {
 			row2.add(descriptionField);
 			add(row2);
 		}
-
 		public String getDescription() {
 			return descriptionField.getText();
 		}
@@ -604,8 +586,6 @@ public class MapUI extends JFrame {
 			}
 		}
 	}
-	
-	
 	private void addFromLoad(Place place) {
 		placeMap.put(place.getPos(), place);
 		ArrayList<Place> searchName = searchByNameList.get(place.getNamn());
